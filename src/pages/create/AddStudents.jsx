@@ -29,8 +29,8 @@ const AddStudents = ({ courseId }) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming JWT token
           },
+          credentials: 'include', 
           body: JSON.stringify({
             student_ids: idsArray,
           }),

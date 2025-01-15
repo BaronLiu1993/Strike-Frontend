@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Typography,
@@ -13,12 +13,41 @@ import StrikeLogo from "../../assets/strike.png"; // Replace with the correct pa
 
 const SubmissionPage = () => {
   const { homeworkId, courseId } = useParams(); // Extract homework and course IDs from the URL
+  const [studentId, setStudentId] = useState(null); // State to store student ID
   const [video, setVideo] = useState(null);
   const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Initially true to show loader
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchStudentId = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/register/student/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", 
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user information. Please log in.");
+        }
+
+        const data = await response.json();
+        setStudentId(data.student_id); 
+      } catch (err) {
+        console.error("Error fetching student ID:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false); 
+      }
+    };
+
+    fetchStudentId();
+  }, []);
 
   const handleVideoChange = (e) => {
     setVideo(e.target.files[0]);
@@ -31,32 +60,55 @@ const SubmissionPage = () => {
     setSuccess(false);
 
     const formData = new FormData();
-    formData.append("submission_video", video || ""); // Add video file
-    formData.append("submission_text", text || ""); // Add text annotation
+    formData.append("submission_video", video || ""); 
+    formData.append("submission_text", text || ""); 
+
+    if (!studentId) {
+      setError("Unable to submit homework. User information not found.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v1/submissions/${courseId}/${homeworkId}/${studentId}/add-submission/`, // Adjusted endpoint to include courseId and homeworkId
+        `http://localhost:8000/api/v1/submission/${courseId}/${homeworkId}/${studentId}/add-submission/`,
         {
           method: "POST",
-          body: formData,
-          credentials: "include",
+          body: formData, 
+          credentials: "include", 
         }
       );
-
+    
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.detail || "Failed to submit homework. Please try again.");
       }
-
+    
       setSuccess(true);
-      navigate(`/course-student/${courseId}`); // Redirect back to the course page
+      navigate(`/course-student/${courseId}`); // Redirect to the course page
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
+    
   };
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          backgroundColor: "#f5f5f5",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div
@@ -81,7 +133,6 @@ const SubmissionPage = () => {
           boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
           borderRadius: "10px",
           padding: "2rem",
-          flexGrow: 1, // Ensure the form stretches to fill the available space
         }}
       >
         <Box
@@ -123,7 +174,6 @@ const SubmissionPage = () => {
           Please upload your video or provide a text annotation for your homework.
         </Typography>
 
-        {/* Video Upload */}
         <Box sx={{ marginBottom: "1rem", width: "100%" }}>
           <Button
             variant="outlined"
@@ -146,7 +196,6 @@ const SubmissionPage = () => {
           </Button>
         </Box>
 
-        {/* Text Annotation */}
         <TextField
           fullWidth
           label="Text Annotation"
@@ -155,12 +204,9 @@ const SubmissionPage = () => {
           rows={4}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          sx={{
-            marginBottom: "1rem",
-          }}
+          sx={{ marginBottom: "1rem" }}
         />
 
-        {/* Error or Success Messages */}
         {error && (
           <Alert severity="error" sx={{ marginBottom: "1rem", width: "100%" }}>
             {error}
@@ -172,7 +218,6 @@ const SubmissionPage = () => {
           </Alert>
         )}
 
-        {/* Submit Button */}
         <Button
           type="submit"
           variant="contained"
@@ -183,9 +228,7 @@ const SubmissionPage = () => {
             fontWeight: "bold",
             backgroundColor: "#000",
             color: "#fff",
-            "&:hover": {
-              backgroundColor: "#333",
-            },
+            "&:hover": { backgroundColor: "#333" },
           }}
           disabled={loading}
           onClick={handleSubmit}

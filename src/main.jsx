@@ -12,6 +12,7 @@ import TeacherHome from './pages/home/TeacherHome.jsx';
 
 import CreateCourse from './pages/create/CreateCourse.jsx';
 import SubmissionPage from './pages/create/SubmissionPage.jsx';
+import ViewSubmissions from './pages/views/ViewSubmissions.jsx'
 
 import AddComment from './pages/create/AddComment.jsx';
 import AddStudents from './pages/create/AddStudents.jsx';
@@ -37,6 +38,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/course-student/:courseId/:homeworkId" element={<Homework />} />
         <Route path="/create-course" element={<CreateCourse />} />
         <Route path="/submission/:courseId/:homeworkId" element={<SubmissionPage />} />
+        <Route path="/submissionview/:courseId/:homeworkId" element={<ViewSubmissions />} />
         <Route path="/add-comment" element={<AddComment />} />
         <Route path="/add-students" element={<AddStudents />} />
       </Routes>

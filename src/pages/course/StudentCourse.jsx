@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Navbar from "../navbar/Navbar";
-import Class from "../../assets/class.jpg"
+import Class from "../../assets/class.jpg";
 
 const StudentCourse = () => {
   const { courseId } = useParams();
@@ -91,7 +91,34 @@ const StudentCourse = () => {
         }
 
         const homeworkData = await homeworkResponse.json();
-        setHomeworks(homeworkData);
+
+        // Fetch grades for each homework if graded
+        const updatedHomeworks = await Promise.all(
+          homeworkData.map(async (homework) => {
+            if (homework.graded && homework.submission_id) {
+              try {
+                const gradeResponse = await fetch(
+                  `http://localhost:8000/api/v1/submission/${courseId}/${homework.id}/students/${homework.student_id}/submission/${homework.submission_id}/grade/`,
+                  {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                  }
+                );
+
+                if (gradeResponse.ok) {
+                  const gradeData = await gradeResponse.json();
+                  return { ...homework, grade: gradeData.grade };
+                }
+              } catch (error) {
+                console.error("Failed to fetch grade", error);
+              }
+            }
+            return homework;
+          })
+        );
+
+        setHomeworks(updatedHomeworks);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -147,9 +174,7 @@ const StudentCourse = () => {
         display: "flex",
         flexDirection: "column",
       }}
-    >      
-
-      {/* Main Content */}
+    >
       <Box
         sx={{
           display: "flex",
@@ -184,7 +209,7 @@ const StudentCourse = () => {
               sx={{
                 fontWeight: "bold",
                 marginBottom: "0.5rem",
-                textShadow: "0 2px 4px rgba(0, 0, 0, 0.7)", // Add text shadow for readability
+                textShadow: "0 2px 4px rgba(0, 0, 0, 0.7)",
               }}
             >
               {courseDetails.title}
@@ -192,8 +217,8 @@ const StudentCourse = () => {
             <Typography
               variant="body2"
               sx={{
-                color: "rgba(255, 255, 255, 0.9)", // Semi-transparent white text
-                textShadow: "0 1px 3px rgba(0, 0, 0, 0.7)", // Add text shadow for readability
+                color: "rgba(255, 255, 255, 0.9)",
+                textShadow: "0 1px 3px rgba(0, 0, 0, 0.7)",
               }}
             >
               {courseDetails.description}
@@ -201,78 +226,6 @@ const StudentCourse = () => {
           </Box>
         )}
 
-
-        {/* Posts Section */}
-        <Box
-          sx={{
-            width: "100%",
-            marginBottom: "1.5rem",
-            overflowY: "auto",
-            maxHeight: "300px",
-          }}
-        >
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
-            Posts
-          </Typography>
-          {posts.length > 0 ? (
-            posts.map((post) => (
-              <Box
-                key={post.id}
-                sx={{
-                  padding: 2,
-                  border: "1px solid #ddd",
-                  borderRadius: 1,
-                  marginBottom: 2,
-                  backgroundColor: "#f9f9f9",
-                }}
-              >
-                <Typography variant="h6" fontWeight="bold">
-                  {post.title}
-                </Typography>
-                <Typography variant="body2">{post.content}</Typography>
-              </Box>
-            ))
-          ) : (
-            <Typography variant="body2" color="textSecondary">
-              No posts available
-            </Typography>
-          )}
-        </Box>
-
-        {/* Lessons Section */}
-        <Accordion sx={{ width: "100%", marginBottom: "1.5rem" }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h5" fontWeight="bold">
-              Lessons
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {lessons.length > 0 ? (
-              lessons.map((lesson) => (
-                <Box
-                  key={lesson.id}
-                  sx={{
-                    padding: 2,
-                    border: "1px solid #ddd",
-                    borderRadius: 1,
-                    marginBottom: 2,
-                  }}
-                >
-                  <Typography variant="h6" fontWeight="bold">
-                    {lesson.title}
-                  </Typography>
-                  <Typography variant="body2">{lesson.description}</Typography>
-                </Box>
-              ))
-            ) : (
-              <Typography variant="body2" color="textSecondary">
-                No lessons available
-              </Typography>
-            )}
-          </AccordionDetails>
-        </Accordion>
-
-        {/* Homework Section */}
         <Accordion sx={{ width: "100%", marginBottom: "1.5rem" }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="h5" fontWeight="bold">
@@ -297,17 +250,30 @@ const StudentCourse = () => {
                   <Typography variant="body2" sx={{ marginBottom: "0.5rem" }}>
                     {homework.description}
                   </Typography>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      backgroundColor: "#000",
-                      color: "#fff",
-                      "&:hover": { backgroundColor: "#333" },
-                    }}
-                    onClick={() => handleHomeworkSubmission(homework.id)}
-                  >
-                    Submit Homework
-                  </Button>
+                  {homework.graded ? (
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: "bold",
+                        color: "green",
+                        marginBottom: "0.5rem",
+                      }}
+                    >
+                      Grade: {homework.grade || "Not Available"}
+                    </Typography>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: "#000",
+                        color: "#fff",
+                        "&:hover": { backgroundColor: "#333" },
+                      }}
+                      onClick={() => handleHomeworkSubmission(homework.id)}
+                    >
+                      Submit Homework
+                    </Button>
+                  )}
                 </Box>
               ))
             ) : (
@@ -318,8 +284,6 @@ const StudentCourse = () => {
           </AccordionDetails>
         </Accordion>
       </Box>
-
-      {/* Navbar */}
       <Navbar />
     </div>
   );
