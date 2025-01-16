@@ -10,6 +10,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogActions,
   TextField,
   CircularProgress,
   Alert,
@@ -20,15 +21,15 @@ const TeacherHome = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
-  const [openCreateDialog, setOpenCreateDialog] = useState(false); 
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [newCourse, setNewCourse] = useState({ title: '', description: '' });
   const [createMessage, setCreateMessage] = useState('');
-  const [creating, setCreating] = useState(false); 
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     const getCourses = async () => {
       try {
-        const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/', {
+        const response = await fetch('http://localhost:8000/api/v1/course/', {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -49,6 +50,38 @@ const TeacherHome = () => {
 
     getCourses();
   }, []);
+
+  const handleCreateCourse = async () => {
+    if (!newCourse.title || !newCourse.description) {
+      setCreateMessage('Please fill in all fields');
+      return;
+    }
+    setCreating(true);
+    setCreateMessage('');
+
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/course/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(newCourse),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create course');
+      }
+
+      const createdCourse = await response.json();
+      setCourses((prevCourses) => [...prevCourses, createdCourse]);
+      setOpenCreateDialog(false);
+      setNewCourse({ title: '', description: '' });
+      setCreateMessage('Course created successfully!');
+    } catch (err) {
+      setCreateMessage('Failed to create course');
+    } finally {
+      setCreating(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -114,7 +147,6 @@ const TeacherHome = () => {
                 {courses.map((course) => (
                   <li
                     key={course.id}
-                    onClick={() => handleCourseClick(course.id)}
                     className="cursor-pointer border p-4 rounded hover:bg-gray-50"
                     style={{
                       backgroundImage: `url(${Violin})`,
@@ -145,6 +177,51 @@ const TeacherHome = () => {
         </div>
         <Navbar />
       </div>
+
+      <Dialog 
+        open={openCreateDialog} 
+        onClose={() => setOpenCreateDialog(false)} 
+        maxWidth="xs" 
+      >
+        <DialogTitle>Create a New Course</DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Course Title"
+            variant="outlined"
+            value={newCourse.title}
+            onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Course Description"
+            variant="outlined"
+            multiline
+            rows={4}
+            value={newCourse.description}
+            onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })}
+          />
+          {createMessage && (
+            <Typography
+              variant="body2"
+              color={createMessage.includes('successfully') ? 'green' : 'error'}
+            >
+              {createMessage}
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenCreateDialog(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleCreateCourse} color="primary" disabled={creating}>
+            {creating ? <CircularProgress size={24} /> : 'Create'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </>
   );
 };

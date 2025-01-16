@@ -7,9 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "ionic:build": "npm run build",
-    "ionic:serve": "vite dev --host"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@capacitor/android": "^6.2.0",

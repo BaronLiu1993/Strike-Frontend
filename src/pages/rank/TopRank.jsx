@@ -39,7 +39,6 @@ function TopRank() {
         }
 
         const data = await response.json();
-        // Sort students by average grade in descending order
         const sortedStudents = data.sort((a, b) => b.average_grade - a.average_grade);
         setStudents(sortedStudents);
       } catch (err) {
