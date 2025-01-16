@@ -1,5 +1,6 @@
 {
   "appId": "com.strike.app",
   "appName": "strike",
-  "webDir": "dist"
+  "webDir": "dist",
+  "bundledWebRuntime": false
 }
