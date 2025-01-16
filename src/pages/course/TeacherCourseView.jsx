@@ -265,7 +265,7 @@ const TeacherCourseView = () => {
                   <Typography variant="h6" fontWeight="bold">
                     {lesson.title}
                   </Typography>
-                  <Typography variant="body2">{lesson.description}</Typography>
+                  <Typography variant="body2">{lesson.content}</Typography>
                 </Box>
               ))
             ) : (
