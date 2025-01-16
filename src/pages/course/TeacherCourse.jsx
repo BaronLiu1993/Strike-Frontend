@@ -39,7 +39,7 @@ const TeacherCourse = () => {
       setLoading(true);
 
       const courseResponse = await fetch(
-        `http://localhost:8000/api/v1/course/${courseId}/`,
+        `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/${courseId}/`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -55,7 +55,7 @@ const TeacherCourse = () => {
       setCourseDetails(courseData);
 
       const postsResponse = await fetch(
-        `http://localhost:8000/api/v1/posts/${courseId}/posts/`,
+        `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/posts/${courseId}/posts/`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -71,7 +71,7 @@ const TeacherCourse = () => {
       setPosts(postsData);
 
       const lessonsResponse = await fetch(
-        `http://localhost:8000/api/v1/lesson/${courseId}/lessons/`,
+        `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/lesson/${courseId}/lessons/`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -87,7 +87,7 @@ const TeacherCourse = () => {
       setLessons(lessonsData);
 
       const homeworkResponse = await fetch(
-        `http://localhost:8000/api/v1/homework/${courseId}/homeworks/`,
+        `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/homework/${courseId}/homeworks/`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -112,16 +112,16 @@ const TeacherCourse = () => {
     fetchData();
   }, [courseId]);
 
-  const handleHomeworkSubmission = (homeworkId) => {
-    navigate(`/submission/${courseId}/${homeworkId}`);
-  };
-
   const openCreateDialog = (type) => {
     setOpenDialog({ ...openDialog, [type]: true });
   };
 
   const closeCreateDialog = (type) => {
     setOpenDialog({ ...openDialog, [type]: false });
+  };
+
+  const handleExtraButtonClick = () => {
+    navigate(`/course-teacher-view/${courseId}`);
   };
 
   if (loading) {
@@ -242,9 +242,17 @@ const TeacherCourse = () => {
           </Button>
           <Button
             variant="contained"
+            sx={{ marginRight: 1 }}
             onClick={() => openCreateDialog("students")}
           >
             Add Students
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ marginRight: 1 }}
+            onClick={handleExtraButtonClick}
+          >
+            Extra Action
           </Button>
         </Box>
 

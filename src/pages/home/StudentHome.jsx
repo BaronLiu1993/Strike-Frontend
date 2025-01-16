@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Violin from '../../assets/violin.jpg';
 import Navbar from '../navbar/Navbar';
 import Strike from '../../assets/strike.png';
-import { Typography, CssBaseline } from '@mui/material'; // Material-UI components for consistent design
+import { Typography, CssBaseline, CircularProgress, Box } from '@mui/material';
 import '@fontsource/poppins'; // Import Poppins font
 
 const StudentHome = () => {
@@ -13,7 +13,7 @@ const StudentHome = () => {
   useEffect(() => {
     const getCourses = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/course/', {
+        const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -43,20 +43,30 @@ const StudentHome = () => {
   };
 
   if (loading) {
-    return <p>Loading courses...</p>;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          backgroundColor: '#f5f5f5',
+        }}
+      >
+        <CircularProgress size={50} sx={{ color: '#3f51b5' }} />
+      </Box>
+    );
   }
 
   if (error) {
-    return <p>Error: {error}</p>;
+    return <Typography variant="h6" color="error">{`Error: ${error}`}</Typography>;
   }
 
   return (
     <>
       <CssBaseline />
       <div className="font-poppins min-h-screen flex flex-col items-center bg-gray-100">
-        {/* Container */}
         <div className="p-6 flex-grow flex flex-col bg-white shadow-md rounded-md items-center w-[25rem] max-w-4xl">
-          {/* Top Bar */}
           <div className="bg-black h-[4rem] w-full flex items-center px-4 rounded-t-md">
             <img
               src={Strike}
@@ -76,7 +86,6 @@ const StudentHome = () => {
             </Typography>
           </div>
 
-          {/* Courses Section */}
           <div className="w-full mt-4">
             {courses.length === 0 ? (
               <Typography variant="body1" color="textSecondary">
@@ -120,8 +129,6 @@ const StudentHome = () => {
             )}
           </div>
         </div>
-
-        {/* Navbar */}
         <Navbar />
       </div>
     </>

@@ -19,7 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Navbar from "../navbar/Navbar";
 import Class from "../../assets/class.jpg";
 
-const StudentCourse = () => {
+const TeacherCourseView = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -67,7 +67,7 @@ const StudentCourse = () => {
         setPosts(postsData);
 
         const lessonsResponse = await fetch(
-          `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/lesson/${courseId}/lessons/`,
+          `http://localhost:8000/api/v1/lesson/${courseId}/lessons/`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -83,7 +83,7 @@ const StudentCourse = () => {
         setLessons(lessonsData);
 
         const homeworkResponse = await fetch(
-          `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/homework/${courseId}/homeworks/`,
+          `http://localhost:8000/api/v1/homework/${courseId}/homeworks/`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -102,7 +102,7 @@ const StudentCourse = () => {
             if (homework.graded && homework.submission_id) {
               try {
                 const gradeResponse = await fetch(
-                  `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/submission/${courseId}/${homework.id}/students/${homework.student_id}/submission/${homework.submission_id}/grade/`,
+                  `http://localhost:8000/api/v1/submission/${courseId}/${homework.id}/students/${homework.student_id}/submission/${homework.submission_id}/grade/`,
                   {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
@@ -134,7 +134,7 @@ const StudentCourse = () => {
   }, [courseId]);
 
   const handleHomeworkSubmission = (homeworkId) => {
-    navigate(`/submission/${courseId}/${homeworkId}`);
+    navigate(`/submissionview/${courseId}/${homeworkId}`);
   };
 
   if (loading) {
@@ -310,7 +310,7 @@ const StudentCourse = () => {
                       }}
                       onClick={() => handleHomeworkSubmission(homework.id)}
                     >
-                      Submit Homework
+                      Grade Homework
                     </Button>
                   )}
                 </Box>
@@ -357,4 +357,4 @@ const StudentCourse = () => {
   );
 };
 
-export default StudentCourse;
+export default TeacherCourseView;

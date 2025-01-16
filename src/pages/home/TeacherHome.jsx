@@ -20,15 +20,15 @@ const TeacherHome = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
-  const [openCreateDialog, setOpenCreateDialog] = useState(false); // State for dialog
+  const [openCreateDialog, setOpenCreateDialog] = useState(false); 
   const [newCourse, setNewCourse] = useState({ title: '', description: '' });
   const [createMessage, setCreateMessage] = useState('');
-  const [creating, setCreating] = useState(false); // Loading state for course creation
+  const [creating, setCreating] = useState(false); 
 
   useEffect(() => {
     const getCourses = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/course/', {
+        const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/', {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -50,45 +50,20 @@ const TeacherHome = () => {
     getCourses();
   }, []);
 
-  const handleCourseClick = (courseId) => {
-    window.location.href = `/course-teacher/${courseId}`;
-  };
-
-  const handleCreateCourse = async () => {
-    if (!newCourse.title.trim() || !newCourse.description.trim()) {
-      setCreateMessage('Title and description are required.');
-      return;
-    }
-    setCreating(true);
-    try {
-      const response = await fetch('http://localhost:8000/api/v1/course/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', 
-        body: JSON.stringify(newCourse),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to create course');
-      }
-
-      const createdCourse = await response.json();
-      setCourses((prevCourses) => [...prevCourses, createdCourse]);
-      setCreateMessage('Course created successfully!');
-      setNewCourse({ title: '', description: '' });
-      setOpenCreateDialog(false);
-    } catch (err) {
-      setCreateMessage(err.message);
-    } finally {
-      setCreating(false);
-    }
-  };
-
   if (loading) {
-    return <CircularProgress />;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          backgroundColor: '#f5f5f5',
+        }}
+      >
+        <CircularProgress size={50} sx={{ color: '#3f51b5' }} />
+      </Box>
+    );
   }
 
   if (error) {
@@ -119,7 +94,6 @@ const TeacherHome = () => {
             </Typography>
           </div>
 
-          {/* Courses Section */}
           <div className="w-full mt-4">
             <Box sx={{ marginBottom: 2, display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="h5">Your Courses</Typography>
@@ -169,49 +143,6 @@ const TeacherHome = () => {
             )}
           </div>
         </div>
-
-        {/* Create Course Dialog */}
-        <Dialog open={openCreateDialog} onClose={() => setOpenCreateDialog(false)}>
-          <DialogTitle>Create New Course</DialogTitle>
-          <DialogContent>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <TextField
-                label="Title"
-                value={newCourse.title}
-                onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
-                fullWidth
-                required
-              />
-              <TextField
-                label="Description"
-                value={newCourse.description}
-                onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })}
-                multiline
-                rows={4}
-                fullWidth
-                required
-              />
-              {createMessage && (
-                <Typography
-                  variant="body2"
-                  color={createMessage.includes('successfully') ? 'green' : 'error'}
-                >
-                  {createMessage}
-                </Typography>
-              )}
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleCreateCourse}
-                disabled={creating}
-              >
-                {creating ? 'Creating...' : 'Create Course'}
-              </Button>
-            </Box>
-          </DialogContent>
-        </Dialog>
-
-        {/* Navbar */}
         <Navbar />
       </div>
     </>

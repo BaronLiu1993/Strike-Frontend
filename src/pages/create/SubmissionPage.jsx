@@ -12,11 +12,11 @@ import {
 import StrikeLogo from "../../assets/strike.png"; // Replace with the correct path to your logo
 
 const SubmissionPage = () => {
-  const { homeworkId, courseId } = useParams(); // Extract homework and course IDs from the URL
-  const [studentId, setStudentId] = useState(null); // State to store student ID
+  const { homeworkId, courseId } = useParams();
+  const [studentId, setStudentId] = useState(null);
   const [video, setVideo] = useState(null);
   const [text, setText] = useState("");
-  const [loading, setLoading] = useState(true); // Initially true to show loader
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
@@ -24,12 +24,10 @@ const SubmissionPage = () => {
   useEffect(() => {
     const fetchStudentId = async () => {
       try {
-        const response = await fetch("http://localhost:8000/register/student/", {
+        const response = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/register/student/", {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", 
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
         });
 
         if (!response.ok) {
@@ -37,12 +35,12 @@ const SubmissionPage = () => {
         }
 
         const data = await response.json();
-        setStudentId(data.student_id); 
+        setStudentId(data.student_id);
       } catch (err) {
         console.error("Error fetching student ID:", err);
         setError(err.message);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -60,8 +58,8 @@ const SubmissionPage = () => {
     setSuccess(false);
 
     const formData = new FormData();
-    formData.append("submission_video", video || ""); 
-    formData.append("submission_text", text || ""); 
+    formData.append("submission_video", video || "");
+    formData.append("submission_text", text || "");
 
     if (!studentId) {
       setError("Unable to submit homework. User information not found.");
@@ -71,27 +69,28 @@ const SubmissionPage = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v1/submission/${courseId}/${homeworkId}/${studentId}/add-submission/`,
+        `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/submission/${courseId}/${homeworkId}/${studentId}/add-submission/`,
         {
           method: "POST",
-          body: formData, 
-          credentials: "include", 
+          body: formData,
+          credentials: "include",
         }
       );
-    
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || "Failed to submit homework. Please try again.");
+        throw new Error(
+          errorData.detail || "Failed to submit homework. Please try again."
+        );
       }
-    
+
       setSuccess(true);
-      navigate(`/course-student/${courseId}`); // Redirect to the course page
+      navigate(`/student-home`);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-    
   };
 
   if (loading) {
@@ -101,7 +100,7 @@ const SubmissionPage = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "100vh",
+          height: "100vh",
           backgroundColor: "#f5f5f5",
         }}
       >
@@ -111,28 +110,28 @@ const SubmissionPage = () => {
   }
 
   return (
-    <div
-      className="flex flex-col items-center justify-center"
-      style={{
+    <Box
+      sx={{
         minHeight: "100vh",
         backgroundColor: "#f5f5f5",
         display: "flex",
-        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "1rem",
       }}
     >
       <CssBaseline />
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
           width: "100%",
-          maxWidth: "25rem",
+          maxWidth: "25rem", 
           backgroundColor: "white",
           boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
-          borderRadius: "10px",
+          borderRadius: "8px",
           padding: "2rem",
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh", 
         }}
       >
         <Box
@@ -159,6 +158,7 @@ const SubmissionPage = () => {
             marginTop: "1rem",
             fontWeight: "bold",
             color: "#333",
+            textAlign: "center",
           }}
         >
           Submit Homework
@@ -236,7 +236,7 @@ const SubmissionPage = () => {
           {loading ? <CircularProgress size={24} color="inherit" /> : "Submit"}
         </Button>
       </Box>
-    </div>
+    </Box>
   );
 };
 

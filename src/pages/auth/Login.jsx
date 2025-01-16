@@ -14,12 +14,15 @@ const Login = () => {
   const submit = async (e) => {
     e.preventDefault();
     setError(null);
+
     const user = {
       username: username,
       password: password,
     };
+
     try {
-      const response = await fetch("http://localhost:8000/api/auth/login/", {
+      // Login request
+      const response = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -27,6 +30,7 @@ const Login = () => {
         body: JSON.stringify(user),
         credentials: "include",
       });
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.detail || "Login failed. Please try again.");
@@ -36,7 +40,30 @@ const Login = () => {
       localStorage.setItem("access_token", data.access);
       localStorage.setItem("refresh_token", data.refresh);
 
-      navigate("/student-home");
+      // Fetch user role
+      const roleResponse = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/user-role/", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${data.access}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (!roleResponse.ok) {
+        throw new Error("Failed to fetch user role. Please try again.");
+      }
+
+      const roleData = await roleResponse.json();
+
+      // Redirect based on role
+      if (roleData.role === "teacher") {
+        navigate("/teacher-home");
+      } else if (roleData.role === "student") {
+        navigate("/student-home");
+      } else {
+        throw new Error("Unknown user role. Contact support.");
+      }
     } catch (err) {
       setError(err.message);
     }
@@ -69,7 +96,7 @@ const Login = () => {
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            filter: "brightness(50%)", // Darkens the video for better readability
+            filter: "brightness(50%)",
           }}
         >
           <source src={BackgroundVideo} type="video/mp4" />
@@ -93,7 +120,7 @@ const Login = () => {
         <div
           className="flex flex-col shadow-md rounded-md items-center justify-center w-[90%] max-w-[400px] p-6"
           style={{
-            backgroundColor: "transparent", // Transparent container
+            backgroundColor: "transparent",
           }}
         >
           <img
@@ -158,15 +185,10 @@ const Login = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 InputLabelProps={{
-                  style: { color: "#fff" }, // White label text
+                  style: { color: "#fff" },
                 }}
                 InputProps={{
-                  style: { color: "#fff", borderColor: "#fff" }, // White input text
-                  classes: {
-                    notchedOutline: {
-                      borderColor: "#fff", // White outline
-                    },
-                  },
+                  style: { color: "#fff", borderColor: "#fff" },
                 }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
@@ -193,15 +215,10 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 InputLabelProps={{
-                  style: { color: "#fff" }, // White label text
+                  style: { color: "#fff" },
                 }}
                 InputProps={{
-                  style: { color: "#fff", borderColor: "#fff" }, // White input text
-                  classes: {
-                    notchedOutline: {
-                      borderColor: "#fff", // White outline
-                    },
-                  },
+                  style: { color: "#fff", borderColor: "#fff" },
                 }}
                 sx={{
                   "& .MuiOutlinedInput-root": {

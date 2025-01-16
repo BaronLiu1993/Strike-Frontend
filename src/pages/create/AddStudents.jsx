@@ -6,13 +6,10 @@ const AddStudents = ({ courseId }) => {
   const [loading, setLoading] = useState(false);
 
   const handleAddStudents = async () => {
-    // Validate input
     if (!studentIds.trim()) {
       setMessage('Please enter at least one student ID.');
       return;
     }
-
-    // Parse and validate student IDs
     const idsArray = studentIds.split(',').map(id => parseInt(id.trim(), 10));
     if (idsArray.some(isNaN)) {
       setMessage('All student IDs must be valid numbers.');
@@ -24,7 +21,7 @@ const AddStudents = ({ courseId }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v1/course/${courseId}/add-students/`,
+        `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/${courseId}/add-students/`,
         {
           method: 'POST',
           headers: {

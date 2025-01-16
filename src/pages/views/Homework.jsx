@@ -57,7 +57,7 @@ function Homework() {
       formData.append('video', video);
       formData.append('annotation', annotation);
 
-      const response = await fetch(`http://localhost:8000/api/v1/homework/${homeworkId}/submit/`, {
+      const response = await fetch(`https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/homework/${homeworkId}/submit/`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

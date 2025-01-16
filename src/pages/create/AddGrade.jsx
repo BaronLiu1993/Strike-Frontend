@@ -49,7 +49,7 @@ const AddGrade = () => {
   const handleGradeSubmit = async (submissionId, grade) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v1/submission/${submissionId}/add-grade/`,
+        `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/submission/${submissionId}/add-grade/`,
         {
           method: "PATCH",
           headers: {

@@ -25,7 +25,7 @@ function TopRank() {
       try {
         setLoading(true);
 
-        const response = await fetch('http://localhost:8000/api/v1/topaveragesviewset/', {
+        const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/topaveragesviewset/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -55,7 +55,6 @@ function TopRank() {
   return (
     <div className="font-oswald min-h-screen flex flex-col items-center bg-gray-100">
       
-      {/* Main Content */}
       <div className="flex-grow flex flex-col bg-white shadow-md rounded-md items-center w-[25rem] overflow-y-auto">
         <Box
           sx={{

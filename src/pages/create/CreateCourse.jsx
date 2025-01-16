@@ -13,7 +13,7 @@ const CreateCourse = () => {
     }
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/v1/course/', {
+      const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,12 +34,12 @@ const CreateCourse = () => {
 
       const data = await response.json();
       setMessage(`Course work created successfully: ${data.title}`);
-      setTitle(''); // Reset the title
-      setDescription(''); // Reset the description
+      setTitle(''); 
+      setDescription(''); 
     } catch (error) {
       setMessage(error.message);
     } finally {
-      setLoading(false); // Set loading back to false
+      setLoading(false); 
     }
   };
 
