@@ -66,24 +66,15 @@ const Register = () => {
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f5f5f5',
-        padding: '1rem',
-      }}
-    >
       <Box
         sx={{
           width: '100%',
-          maxWidth: '400px',
           backgroundColor: 'white',
           boxShadow: '0px 4px 10px rgba(0,0,0,0.1)',
           borderRadius: '8px',
           padding: '2rem',
+          height: '100vh',
+          boxSizing: 'border-box', // Ensures padding doesn't affect the box size
         }}
       >
         <Typography variant="h5" textAlign="center" mb={2} fontWeight="bold">
@@ -162,7 +153,6 @@ const Register = () => {
           {loading ? <CircularProgress size={24} color="inherit" /> : 'Register'}
         </Button>
       </Box>
-    </Box>
   );
 };
 
