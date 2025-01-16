@@ -375,7 +375,7 @@ const StudentCourse = () => {
                   variant="subtitle1"
                   sx={{ fontWeight: "bold", lineHeight: 1.2 }}
                 >
-                  {post.author || "Davis Chow"}
+                  {"Davis Chow"}
                 </Typography>
                 <Typography
                   variant="caption"
