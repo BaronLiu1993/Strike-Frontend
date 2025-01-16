@@ -22,7 +22,7 @@ const CreateHomework = ({ isTeacher }) => {
     e.preventDefault();
 
     if (!isTeacher) {
-      alert("Only teachers can create homework.");
+      setTimeout(() => window.location.reload(), 1000); // Reload after the user sees the error
       return;
     }
 
@@ -33,6 +33,7 @@ const CreateHomework = ({ isTeacher }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
           credentials: "include",
           body: JSON.stringify({
@@ -49,11 +50,10 @@ const CreateHomework = ({ isTeacher }) => {
         throw new Error(errorData.detail || "Failed to create homework");
       }
 
-      alert("Homework created successfully!");
       setFormData({ title: "", description: "", dueDate: "" });
+      setTimeout(() => window.location.reload(), 1000); // Reload after successful submission
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred while creating homework. Please try again.");
     }
   };
 

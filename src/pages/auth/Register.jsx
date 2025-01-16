@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { Box, Button, CircularProgress, TextField, Typography, Alert } from '@mui/material';
 
 const Register = () => {
@@ -8,6 +9,8 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleRegister = async () => {
     if (!username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
@@ -46,11 +49,15 @@ const Register = () => {
         throw new Error(errorData.detail || 'Failed to register.');
       }
 
-      setMessage('Registration successful! You can now log in.');
+      setMessage('Registration successful! Redirecting to login...');
       setUsername('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
+
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
     } catch (error) {
       setMessage(error.message);
     } finally {

@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 const CreateCourse = () => {
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
-  const [message, setMessage] = useState(''); 
-  const [loading, setLoading] = useState(false); 
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (!title.trim() || !description.trim()) {
@@ -17,29 +17,32 @@ const CreateCourse = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        credentials: 'include', 
+        credentials: 'include',
         body: JSON.stringify({
           title,
           description,
-          students: [], 
+          students: [],
         }),
       });
 
       if (!response.ok) {
-        // Attempt to extract error message from API response
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to create course work');
       }
 
       const data = await response.json();
       setMessage(`Course work created successfully: ${data.title}`);
-      setTitle(''); 
-      setDescription(''); 
+      setTitle('');
+      setDescription('');
+      setTimeout(() => {
+        window.location.reload(); // Reload the page
+      }, 1000); // Delay for the user to see the success message
     } catch (error) {
       setMessage(error.message);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -75,7 +78,7 @@ const CreateCourse = () => {
         className={`${
           loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
         } text-white px-4 py-2 rounded`}
-        disabled={loading} // Disable button while loading
+        disabled={loading}
       >
         {loading ? 'Submitting...' : 'Submit'}
       </button>

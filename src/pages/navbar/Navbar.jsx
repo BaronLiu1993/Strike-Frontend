@@ -1,8 +1,9 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
-import LeaderboardIcon from '@mui/icons-material/Leaderboard';
-import AddBoxIcon from '@mui/icons-material/AddBox';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Box, IconButton, Tooltip } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -12,28 +13,70 @@ const Navbar = () => {
   };
 
   return (
-    <>
-      <div className="flex flex-row bg-slate-100 justify-evenly items-center p-4 fixed bottom-0 w-[25rem]">
-        <button
-          className="flex items-center justify-center p-2"
-          onClick={() => handleNavigation('/teacher-home')}
+    <Box
+      sx={{
+        position: "fixed",
+        bottom: 0,
+        width: "100%",
+        backgroundColor: "#f5f5f5",
+        boxShadow: "0px -2px 10px rgba(0,0,0,0.1)",
+        display: "flex",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        padding: "0.5rem 0",
+        zIndex: 1000, // Ensure it stays above other components
+      }}
+    >
+      {/* Home Button */}
+      <Tooltip title="Home" arrow>
+        <IconButton
+          onClick={() => handleNavigation("/teacher-home")}
+          sx={{
+            color: "#555",
+            "&:hover": {
+              color: "#000",
+              transform: "scale(1.1)", // Slight scaling effect on hover
+            },
+            transition: "all 0.3s ease",
+          }}
         >
-          <HomeIcon />
-        </button>
-        <button
-          className="flex items-center justify-center p-2"
-          onClick={() => handleNavigation('/leaderboard')}
+          <HomeIcon fontSize="large" />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip title="Leaderboard" arrow>
+        <IconButton
+          onClick={() => handleNavigation("/leaderboard")}
+          sx={{
+            color: "#555",
+            "&:hover": {
+              color: "#000",
+              transform: "scale(1.1)", // Slight scaling effect on hover
+            },
+            transition: "all 0.3s ease",
+          }}
         >
-          <LeaderboardIcon />
-        </button>
-        <button
-          className="flex items-center justify-center p-2"
-          onClick={() => handleNavigation('/add-course')}
+          <LeaderboardIcon fontSize="large" />
+        </IconButton>
+      </Tooltip>
+
+      {/* Add Course Button */}
+      <Tooltip title="Add Course" arrow>
+        <IconButton
+          onClick={() => handleNavigation("/add-course")}
+          sx={{
+            color: "#555",
+            "&:hover": {
+              color: "#000",
+              transform: "scale(1.1)", // Slight scaling effect on hover
+            },
+            transition: "all 0.3s ease",
+          }}
         >
-          <AddBoxIcon />
-        </button>
-      </div>
-    </>
+          <AddBoxIcon fontSize="large" />
+        </IconButton>
+      </Tooltip>
+    </Box>
   );
 };
 

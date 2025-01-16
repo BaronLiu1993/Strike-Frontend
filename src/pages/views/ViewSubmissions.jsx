@@ -25,10 +25,12 @@ const ViewSubmissions = ({ onClose }) => {
         setLoading(true);
 
         const response = await fetch(
-          `http://localhost:8000/api/v1/submission/${courseId}/${homeworkId}/submissions/`,
+          `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/submission/${courseId}/${homeworkId}/submissions/`,
           {
             method: "GET",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+             },
             credentials: "include",
           }
         );
@@ -52,11 +54,12 @@ const ViewSubmissions = ({ onClose }) => {
   const handleGradeSubmit = async (submissionId, grade) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v1/submission/${courseId}/${homeworkId}/submission/${submissionId}/add-grade/`,
+        `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/submission/${courseId}/${homeworkId}/submission/${submissionId}/add-grade/`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
           },
           credentials: "include",
           body: JSON.stringify({
@@ -244,19 +247,6 @@ const ViewSubmissions = ({ onClose }) => {
             <Typography>No submissions available.</Typography>
           )}
         </Box>
-        <Button
-          variant="contained"
-          onClick={onClose}
-          sx={{
-            marginTop: 2,
-            backgroundColor: "#000",
-            color: "#fff",
-            "&:hover": { backgroundColor: "#333" },
-          }}
-        >
-          Close
-        </Button>
-        
       </Box>
       <Navbar />
     </Box>

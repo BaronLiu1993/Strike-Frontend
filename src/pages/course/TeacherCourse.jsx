@@ -42,7 +42,9 @@ const TeacherCourse = () => {
         `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/${courseId}/`,
         {
           method: "GET",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+           },
           credentials: "include",
         }
       );
@@ -58,7 +60,9 @@ const TeacherCourse = () => {
         `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/posts/${courseId}/posts/`,
         {
           method: "GET",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+           },
           credentials: "include",
         }
       );
@@ -74,7 +78,9 @@ const TeacherCourse = () => {
         `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/lesson/${courseId}/lessons/`,
         {
           method: "GET",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+           },
           credentials: "include",
         }
       );
@@ -92,6 +98,7 @@ const TeacherCourse = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
           },
           credentials: "include",
         }
@@ -128,38 +135,38 @@ const TeacherCourse = () => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-          backgroundColor: "#f5f5f5",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "100vh",
+            backgroundColor: "#f5f5f5",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
 
-  if (error) {
+    if (error) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "100%",
+            backgroundColor: "#f5f5f5",
+          }}
+        >
+          <Alert severity="error">{error}</Alert>
+        </Box>
+      );
+    }
+
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-          backgroundColor: "#f5f5f5",
-        }}
-      >
-        <Alert severity="error">{error}</Alert>
-      </Box>
-    );
-  }
-
-  return (
-    <div
+      <div
       className="flex flex-col items-center justify-center"
       style={{
         minHeight: "100vh",
@@ -173,14 +180,13 @@ const TeacherCourse = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          maxWidth: "25rem",
+          width: "100%", // Full width
+          flex: 1, // Dynamically adjusts height to fill the parent
           backgroundColor: "white",
           boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
           borderRadius: "10px",
           padding: "2rem",
-          flexGrow: 1,
+          overflow: "auto", // Allows scrolling for overflowing content
         }}
       >
         {courseDetails && (
@@ -218,46 +224,34 @@ const TeacherCourse = () => {
             </Typography>
           </Box>
         )}
-
+    
         {/* Create Buttons */}
-        <Box sx={{ marginBottom: 3 }}>
-          <Button
-            variant="contained"
-            sx={{ marginRight: 1 }}
-            onClick={() => openCreateDialog("post")}
-          >
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 1.5,
+            justifyContent: "center",
+            marginBottom: 3,
+          }}
+        >
+          <Button variant="contained" onClick={() => openCreateDialog("post")}>
             Create Post
           </Button>
-          <Button
-            variant="contained"
-            sx={{ marginRight: 1 }}
-            onClick={() => openCreateDialog("lesson")}
-          >
+          <Button variant="contained" onClick={() => openCreateDialog("lesson")}>
             Create Lesson
           </Button>
-          <Button
-            variant="contained"
-            sx={{ marginRight: 1 }}
-            onClick={() => openCreateDialog("homework")}
-          >
+          <Button variant="contained" onClick={() => openCreateDialog("homework")}>
             Create Homework
           </Button>
-          <Button
-            variant="contained"
-            sx={{ marginRight: 1 }}
-            onClick={() => openCreateDialog("students")}
-          >
+          <Button variant="contained" onClick={() => openCreateDialog("students")}>
             Add Students
           </Button>
-          <Button
-            variant="contained"
-            sx={{ marginRight: 1 }}
-            onClick={handleExtraButtonClick}
-          >
-            Extra Action
+          <Button variant="contained" onClick={handleExtraButtonClick}>
+            View Class
           </Button>
         </Box>
-
+    
         {/* Dialogs */}
         <Dialog open={openDialog.post} onClose={() => closeCreateDialog("post")}>
           <DialogTitle>Create Post</DialogTitle>
@@ -268,11 +262,8 @@ const TeacherCourse = () => {
             <Button onClick={() => closeCreateDialog("post")}>Close</Button>
           </DialogActions>
         </Dialog>
-
-        <Dialog
-          open={openDialog.lesson}
-          onClose={() => closeCreateDialog("lesson")}
-        >
+    
+        <Dialog open={openDialog.lesson} onClose={() => closeCreateDialog("lesson")}>
           <DialogTitle>Create Lesson</DialogTitle>
           <DialogContent>
             <CreateLesson isTeacher={true} />
@@ -281,7 +272,7 @@ const TeacherCourse = () => {
             <Button onClick={() => closeCreateDialog("lesson")}>Close</Button>
           </DialogActions>
         </Dialog>
-
+    
         <Dialog
           open={openDialog.homework}
           onClose={() => closeCreateDialog("homework")}
@@ -294,7 +285,7 @@ const TeacherCourse = () => {
             <Button onClick={() => closeCreateDialog("homework")}>Close</Button>
           </DialogActions>
         </Dialog>
-
+    
         <Dialog
           open={openDialog.students}
           onClose={() => closeCreateDialog("students")}
@@ -308,9 +299,11 @@ const TeacherCourse = () => {
           </DialogActions>
         </Dialog>
       </Box>
-
+    
       <Navbar />
     </div>
+    
+
   );
 };
 

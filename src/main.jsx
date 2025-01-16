@@ -21,7 +21,6 @@ import StudentCourse from './pages/course/StudentCourse.jsx';
 import TeacherCourse from './pages/course/TeacherCourse.jsx';
 import TeacherCourseView from './pages/course/TeacherCourseView.jsx';
 
-import Homework from './pages/views/Homework.jsx'
 import Leaderboard from './pages/rank/TopRank.jsx'
 
 createRoot(document.getElementById('root')).render(
@@ -37,7 +36,6 @@ createRoot(document.getElementById('root')).render(
         <Route path="/course-teacher/:courseId" element={<TeacherCourse />} />
         <Route path="/course-student/:courseId" element={<StudentCourse />} />
         <Route path="/course-teacher-view/:courseId" element = {<TeacherCourseView />} />
-        <Route path="/course-student/:courseId/:homeworkId" element={<Homework />} />
         <Route path="/create-course" element={<CreateCourse />} />
         <Route path="/submission/:courseId/:homeworkId" element={<SubmissionPage />} />
         <Route path="/submissionview/:courseId/:homeworkId" element={<ViewSubmissions />} />

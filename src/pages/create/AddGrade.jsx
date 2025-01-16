@@ -25,6 +25,7 @@ const AddGrade = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
             },
             credentials: "include",
           }
@@ -54,6 +55,7 @@ const AddGrade = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
           },
           credentials: "include",
           body: JSON.stringify({ grade }),

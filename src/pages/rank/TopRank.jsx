@@ -31,6 +31,7 @@ function TopRank() {
             'Content-Type': 'application/json',
           },
           credentials: 'include',
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
         });
 
         if (!response.ok) {
@@ -52,12 +53,12 @@ function TopRank() {
   }, []);
 
   return (
-    <div className="font-oswald min-h-screen flex flex-col items-center bg-gray-100">
+    <div className="font-oswald min-h-screen w-full flex flex-col items-center bg-gray-100">
       
-      <div className="flex-grow flex flex-col bg-white shadow-md rounded-md items-center w-[25rem] overflow-y-auto">
+      <div className="flex-grow flex flex-col bg-white shadow-md rounded-md items-center w-full overflow-y-auto">
         <Box
           sx={{
-            width: '25rem',
+            width: '100%',
             backgroundColor: '#000',
             padding: 2,
             display: 'flex',

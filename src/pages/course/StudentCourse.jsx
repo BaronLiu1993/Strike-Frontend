@@ -38,7 +38,10 @@ const StudentCourse = () => {
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/${courseId}/`,
           {
             method: "GET",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+
+             },
             credentials: "include",
           }
         );
@@ -56,6 +59,8 @@ const StudentCourse = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+
             },
             credentials: "include",
           }
@@ -72,7 +77,9 @@ const StudentCourse = () => {
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/lesson/${courseId}/lessons/`,
           {
             method: "GET",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+             },
             credentials: "include",
           }
         );
@@ -88,7 +95,10 @@ const StudentCourse = () => {
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/homework/${courseId}/homeworks/`,
           {
             method: "GET",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+
+             },
             credentials: "include",
           }
         );
@@ -107,7 +117,9 @@ const StudentCourse = () => {
                   `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/submission/${courseId}/${homework.id}/students/${homework.student_id}/submission/${homework.submission_id}/grade/`,
                   {
                     method: "GET",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json",
+                      Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+                     },
                     credentials: "include",
                   }
                 );
@@ -188,7 +200,6 @@ const StudentCourse = () => {
           alignItems: "center",
           justifyContent: "center",
           width: "100%",
-          maxWidth: "25rem",
           backgroundColor: "white",
           boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
           borderRadius: "10px",
@@ -325,34 +336,92 @@ const StudentCourse = () => {
           </AccordionDetails>
         </Accordion>
 
-        <Box sx={{ width: "100%", marginBottom: "1.5rem" }}>
-          <Typography
-            variant="h5"
-            fontWeight="bold"
-            sx={{ marginBottom: "1rem" }}
-          >
-            Posts
-          </Typography>
-          {posts.length > 0 ? (
-            posts.map((post) => (
-              <Card key={post.id} sx={{ marginBottom: 2 }}>
-                <CardHeader
-                  avatar={<Avatar>{post.author[0]}</Avatar>}
-                  title={post.author}
-                  subheader={new Date(post.created_at).toLocaleString()}
-                />
-                <CardContent>
-                  <Typography variant="body1">{post.content}</Typography>
-                </CardContent>
-                <Divider />
-              </Card>
-            ))
-          ) : (
-            <Typography variant="body2" color="textSecondary">
-              No posts available
-            </Typography>
-          )}
-        </Box>
+        <Box
+              sx={{
+                width: "100%",
+                marginTop: "2rem",
+                padding: "1rem",
+                backgroundColor: "white",
+                borderRadius: "10px",
+                boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
+                maxHeight: "500px", 
+                overflowY: "auto", 
+              }}
+            >
+              <Typography
+                variant="h5"
+                fontWeight="bold"
+                sx={{ marginBottom: "1rem", textAlign: "center" }}
+              >
+                Posts Feed
+              </Typography>
+        
+              {posts && posts.length > 0 ? (
+                posts.map((post) => (
+                  <Card
+                    key={post.id}
+                    sx={{
+                      marginBottom: 2,
+                      border: "1px solid #ddd",
+                      borderRadius: "10px",
+                      overflow: "hidden",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "0.5rem 1rem",
+                        borderBottom: "1px solid #eee",
+                      }}
+                    >
+                      <Avatar
+                        sx={{
+                          backgroundColor: "#3f51b5",
+                          marginRight: "0.5rem",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {post.author ? post.author[0] : "?"}
+                      </Avatar>
+                      <Box>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontWeight: "bold", lineHeight: 1.2 }}
+                        >
+                          {post.author || "Davis Chow"}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: "gray", lineHeight: 1.2 }}
+                        >
+                          {new Date(post.created_at).toLocaleString()}
+                        </Typography>
+                      </Box>
+                    </Box>
+        
+                    <CardContent>
+                      <Typography variant="body1" sx={{ marginBottom: "0.5rem" }}>
+                        {post.title}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {post.content}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  sx={{ textAlign: "center", marginTop: "1rem" }}
+                >
+                  No posts available
+                </Typography>
+              )}
+            </Box>
       </Box>
       <Navbar />
     </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, NavLink } from "react-router-dom";
 import {
   Typography,
   Button,
@@ -10,6 +10,7 @@ import {
   Alert,
 } from "@mui/material";
 import StrikeLogo from "../../assets/strike.png"; // Replace with the correct path to your logo
+import Navbar from "../navbar/Navbar";
 
 const SubmissionPage = () => {
   const { homeworkId, courseId } = useParams();
@@ -26,7 +27,9 @@ const SubmissionPage = () => {
       try {
         const response = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/register/student/", {
           method: "GET",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+           },
           credentials: "include",
         });
 
@@ -74,6 +77,7 @@ const SubmissionPage = () => {
           method: "POST",
           body: formData,
           credentials: "include",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
         }
       );
 
@@ -96,44 +100,45 @@ const SubmissionPage = () => {
   if (loading) {
     return (
       <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          backgroundColor: "#f5f5f5",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            backgroundColor: "#f5f5f5",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
 
-  return (
+    return (
     <Box
       sx={{
-        minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
+        width: "100vw", // Full screen width
+        height: "100vh", // Full screen height
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "1rem",
+        backgroundColor: "#f5f5f5", // Background for the whole screen
       }}
     >
       <CssBaseline />
       <Box
         sx={{
-          width: "100%",
-          maxWidth: "25rem", 
+          width: "100%", // Responsive width
           backgroundColor: "white",
           boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
           borderRadius: "8px",
           padding: "2rem",
           display: "flex",
           flexDirection: "column",
-          height: "100vh", 
+          height: "100%", // Full height
+          paddingBottom: "64px", // Add padding to account for the Navbar
         }}
       >
+        {/* Header Section */}
         <Box
           sx={{
             width: "100%",
@@ -142,7 +147,7 @@ const SubmissionPage = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            borderRadius: "8px 8px 0 0",
+            borderRadius: "8px 8px 0 0", // Rounded top corners
           }}
         >
           <img
@@ -152,10 +157,11 @@ const SubmissionPage = () => {
           />
         </Box>
 
+        {/* Title */}
         <Typography
           variant="h5"
           sx={{
-            marginTop: "1rem",
+            marginTop: "1.5rem",
             fontWeight: "bold",
             color: "#333",
             textAlign: "center",
@@ -174,6 +180,7 @@ const SubmissionPage = () => {
           Please upload your video or provide a text annotation for your homework.
         </Typography>
 
+        {/* Upload Button */}
         <Box sx={{ marginBottom: "1rem", width: "100%" }}>
           <Button
             variant="outlined"
@@ -196,6 +203,7 @@ const SubmissionPage = () => {
           </Button>
         </Box>
 
+        {/* Text Annotation Field */}
         <TextField
           fullWidth
           label="Text Annotation"
@@ -218,6 +226,7 @@ const SubmissionPage = () => {
           </Alert>
         )}
 
+        {/* Submit Button */}
         <Button
           type="submit"
           variant="contained"
@@ -236,7 +245,11 @@ const SubmissionPage = () => {
           {loading ? <CircularProgress size={24} color="inherit" /> : "Submit"}
         </Button>
       </Box>
+
+      {/* Navbar */}
+      <Navbar sx={{ marginTop: "auto" }} />
     </Box>
+
   );
 };
 
