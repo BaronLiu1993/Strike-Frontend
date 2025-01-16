@@ -77,7 +77,6 @@ const Login = () => {
         position: "relative",
       }}
     >
-      {/* Video Background */}
       <div
         style={{
           position: "absolute",
@@ -118,10 +117,7 @@ const Login = () => {
         }}
       >
         <div
-          className="flex flex-col shadow-md rounded-md items-center justify-center w-[90%] max-w-[400px] p-6"
-          style={{
-            backgroundColor: "transparent",
-          }}
+          className="flex flex-col rounded-md items-center justify-center w-[90%] max-w-[400px] p-6"
         >
           <img
             src={StrikeLogo}
