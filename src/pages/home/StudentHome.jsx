@@ -27,6 +27,7 @@ const StudentHome = () => {
 
         const data = await response.json();
         setCourses(data);
+
       } catch (err) {
         setError(err.message);
       } finally {

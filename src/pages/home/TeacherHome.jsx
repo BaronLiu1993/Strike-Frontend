@@ -29,10 +29,10 @@ const TeacherHome = () => {
   useEffect(() => {
     const getCourses = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/course/', {
+        const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/', {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
+          credentials: "include",
         });
 
         if (!response.ok) {
@@ -40,6 +40,7 @@ const TeacherHome = () => {
         }
 
         const data = await response.json();
+        console.log(data)
         setCourses(data);
       } catch (err) {
         setError(err.message);
@@ -60,9 +61,10 @@ const TeacherHome = () => {
     setCreateMessage('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/course/', {
+      const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type':
+           'application/json' },
         credentials: 'include',
         body: JSON.stringify(newCourse),
       });
@@ -72,6 +74,7 @@ const TeacherHome = () => {
       }
 
       const createdCourse = await response.json();
+      
       setCourses((prevCourses) => [...prevCourses, createdCourse]);
       setOpenCreateDialog(false);
       setNewCourse({ title: '', description: '' });
