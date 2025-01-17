@@ -186,7 +186,7 @@ const TeacherCourseView = () => {
 
   return (
     <div
-      className="flex flex-col items-center"
+      className="flex flex-col justify-center"
       style={{
         minHeight: "100vh",
         backgroundColor: "#f5f5f5",
@@ -198,7 +198,6 @@ const TeacherCourseView = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
           justifyContent: "center",
           width: "100%",
           backgroundColor: "white",
