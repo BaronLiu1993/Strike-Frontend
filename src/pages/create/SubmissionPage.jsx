@@ -77,7 +77,9 @@ const SubmissionPage = () => {
           method: "POST",
           body: formData,
           credentials: "include",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
         }
       );
 
