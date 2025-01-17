@@ -186,7 +186,7 @@ const TeacherCourseView = () => {
 
   return (
     <div
-      className="flex flex-col items-center justify-center"
+      className="flex flex-col items-center"
       style={{
         minHeight: "100vh",
         backgroundColor: "#f5f5f5",
