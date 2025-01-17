@@ -149,7 +149,7 @@ const StudentCourse = () => {
   }, [courseId]);
 
   const handleHomeworkSubmission = (homeworkId) => {
-    navigate(`/submissionview/${courseId}/${homeworkId}`);
+    navigate(`/submission/${courseId}/${homeworkId}`);
   };
 
   if (loading) {
@@ -309,7 +309,7 @@ const StudentCourse = () => {
                   }}
                   onClick={() => handleHomeworkSubmission(homework.id)} // Redirect to grade submissions
                 >
-                  Grade Homework
+                  Submit
                 </Button>
               </Box>
             ))
