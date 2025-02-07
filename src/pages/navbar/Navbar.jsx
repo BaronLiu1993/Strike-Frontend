@@ -12,6 +12,40 @@ const Navbar = () => {
     navigate(path);
   };
 
+  const handleHomeNavigation = async (path) => {
+    try {
+      const accessToken = localStorage.getItem("access_token"); 
+      if (!accessToken) {
+        throw new Error("No access token found. Please log in again.");
+      }
+  
+      const roleResponse = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/user-role/", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+  
+      if (!roleResponse.ok) {
+        throw new Error("Failed to fetch user role. Please try again.");
+      }
+  
+      const roleData = await roleResponse.json();
+  
+      if (roleData.role === "teacher") {
+        navigate("/teacher-home");
+      } else if (roleData.role === "student") {
+        navigate("/student-home");
+      } else {
+        throw new Error("Unknown user role. Contact support.");
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -24,18 +58,17 @@ const Navbar = () => {
         justifyContent: "space-evenly",
         alignItems: "center",
         padding: "0.5rem 0",
-        zIndex: 1000, // Ensure it stays above other components
+        zIndex: 1000, 
       }}
     >
-      {/* Home Button */}
       <Tooltip title="Home" arrow>
         <IconButton
-          onClick={() => handleNavigation("/teacher-home")}
+          onClick={() => handleHomeNavigation()}
           sx={{
             color: "#555",
             "&:hover": {
               color: "#000",
-              transform: "scale(1.1)", // Slight scaling effect on hover
+              transform: "scale(1.1)", 
             },
             transition: "all 0.3s ease",
           }}
@@ -51,7 +84,7 @@ const Navbar = () => {
             color: "#555",
             "&:hover": {
               color: "#000",
-              transform: "scale(1.1)", // Slight scaling effect on hover
+              transform: "scale(1.1)", 
             },
             transition: "all 0.3s ease",
           }}
@@ -60,7 +93,6 @@ const Navbar = () => {
         </IconButton>
       </Tooltip>
 
-      {/* Add Course Button */}
       <Tooltip title="Add Course" arrow>
         <IconButton
           onClick={() => handleNavigation("/add-course")}
@@ -68,7 +100,7 @@ const Navbar = () => {
             color: "#555",
             "&:hover": {
               color: "#000",
-              transform: "scale(1.1)", // Slight scaling effect on hover
+              transform: "scale(1.1)", 
             },
             transition: "all 0.3s ease",
           }}

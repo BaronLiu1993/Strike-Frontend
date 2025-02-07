@@ -26,12 +26,8 @@ const StudentHome = () => {
         if (!response.ok) throw new Error('Failed to fetch courses');
     
         const data = await response.json();
-        console.log("Fetched courses data:", data);
-    
-        // Handle paginated data
         setCourses(data.results || data || []);
       } catch (err) {
-        console.error("Error fetching courses:", err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -54,7 +50,7 @@ const StudentHome = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "100vh", // Full screen height
+          minHeight: "100vh", 
           backgroundColor: "#f5f5f5",
         }}
       >
@@ -70,7 +66,7 @@ const StudentHome = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "100vh", // Full screen height
+          minHeight: "100vh", 
           backgroundColor: "#f5f5f5",
         }}
       >
@@ -83,35 +79,41 @@ const StudentHome = () => {
     <>
       <CssBaseline />
       <div
-        className="font-poppins flex flex-col items-center bg-gray-100"
+        className="font-poppins flex flex-col items-center bg-gray-300"
         style={{ minHeight: "100vh", paddingBottom: "64px" }} // Reserve space for Navbar
       >
-        {/* Main Content */}
         <div
           className="p-6 flex-grow flex flex-col bg-white shadow-md rounded-md items-center w-full"
           style={{
-            flex: 1, // Ensure the content grows to fill available space
-            overflowY: "auto", // Allow scrolling for long content
+            flex: 1, 
+            overflowY: "auto", 
             paddingBottom: "64px", 
           }}
         >
-          {/* Header */}
-          <div className="bg-black h-[4rem] w-full flex items-center px-4 rounded-t-md">
-            <img
-              src={Strike}
-              alt="Strike Music Institute Logo"
-              className="h-[3rem] w-[3rem] object-contain"
-            />
+          <div className="bg-slate-200 h-[4rem] w-full flex justify-center items-center px-4 rounded-t-md">
+            
             <Typography
               variant="h6"
               component="h1"
               style={{
                 marginLeft: "1rem",
-                color: "white",
+                color: "brown",
+                fontFamily: "Poppins, sans-serif",
+                font: "bold"
+              }}
+            >
+              Hello,
+            </Typography>
+            <Typography
+              variant="h6"
+              component="h1"
+              style={{
+                marginLeft: "1rem",
+                color: "black",
                 fontFamily: "Poppins, sans-serif",
               }}
             >
-              Strike Music Institute
+                Welcome back to Strike!
             </Typography>
           </div>
   

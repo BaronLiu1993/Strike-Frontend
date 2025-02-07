@@ -1,0 +1,8 @@
+{
+  "appId": "io.ionic.strike",
+  "appName": "strike",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "dist",
+  "cordova": {}
+}

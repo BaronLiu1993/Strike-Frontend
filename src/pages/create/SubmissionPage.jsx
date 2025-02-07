@@ -116,96 +116,57 @@ const SubmissionPage = () => {
     }
 
     return (
-    <Box
+      <Box
       sx={{
-        width: "100vw", // Full screen width
-        height: "100vh", // Full screen height
+        width: "100vw",
+        height: "100vh",
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f5f5f5", // Background for the whole screen
+        paddingBottom: "64px",
       }}
     >
       <CssBaseline />
       <Box
         sx={{
-          width: "100%", // Responsive width
-          backgroundColor: "white",
-          boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
-          borderRadius: "8px",
+          width: "90%",
+          maxWidth: "400px",
+          backgroundColor: "#fff",
+          borderRadius: "16px",
           padding: "2rem",
-          display: "flex",
-          flexDirection: "column",
-          height: "100%", // Full height
-          paddingBottom: "64px", // Add padding to account for the Navbar
+          textAlign: "center",
         }}
       >
-        {/* Header Section */}
-        <Box
-          sx={{
-            width: "100%",
-            backgroundColor: "black",
-            padding: 2,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: "8px 8px 0 0", // Rounded top corners
-          }}
-        >
-          <img
-            src={StrikeLogo}
-            alt="Strike Music Institute"
-            style={{ width: "60px", height: "auto" }}
-          />
+        <Box sx={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
+          <img src={StrikeLogo} alt="Strike Music Institute" style={{ width: "60px", height: "auto" }} />
         </Box>
 
-        {/* Title */}
-        <Typography
-          variant="h5"
-          sx={{
-            marginTop: "1.5rem",
-            fontWeight: "bold",
-            color: "#333",
-            textAlign: "center",
-          }}
-        >
+        <Typography variant="h5" fontWeight="bold" color="black">
           Submit Homework
         </Typography>
-        <Typography
-          variant="body2"
-          sx={{
-            marginBottom: "1.5rem",
-            color: "#666",
-            textAlign: "center",
-          }}
-        >
-          Please upload your video or provide a text annotation for your homework.
+        <Typography variant="body2" color="textSecondary" sx={{ marginBottom: "1.5rem" }}>
+          Upload your video or provide a text annotation for your homework.
         </Typography>
 
-        {/* Upload Button */}
-        <Box sx={{ marginBottom: "1rem", width: "100%" }}>
-          <Button
-            variant="outlined"
-            component="label"
-            fullWidth
-            sx={{
-              textTransform: "none",
-              fontWeight: "bold",
-              borderColor: "#333",
-              "&:hover": { borderColor: "#000" },
-            }}
-          >
-            {video ? video.name : "Upload Video"}
-            <input
-              type="file"
-              accept="video/*"
-              hidden
-              onChange={handleVideoChange}
-            />
-          </Button>
-        </Box>
+        <Button
+          variant="contained"
+          component="label"
+          fullWidth
+          sx={{
+            backgroundColor: "black",
+            color: "#fff",
+            textTransform: "none",
+            fontWeight: "bold",
+            borderRadius: "8px",
+            marginBottom: "1rem",
+            '&:hover': { backgroundColor: "brown" },
+          }}
+        >
+          {video ? video.name : "Upload Video"}
+          <input type="file" accept="video/*" hidden onChange={handleVideoChange} />
+        </Button>
 
-        {/* Text Annotation Field */}
         <TextField
           fullWidth
           label="Text Annotation"
@@ -214,21 +175,12 @@ const SubmissionPage = () => {
           rows={4}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          sx={{ marginBottom: "1rem" }}
+          sx={{ marginBottom: "1rem", backgroundColor: "#f5f5f5", borderRadius: "8px" }}
         />
 
-        {error && (
-          <Alert severity="error" sx={{ marginBottom: "1rem", width: "100%" }}>
-            {error}
-          </Alert>
-        )}
-        {success && (
-          <Alert severity="success" sx={{ marginBottom: "1rem", width: "100%" }}>
-            Submission successful!
-          </Alert>
-        )}
+        {error && <Alert severity="error" sx={{ marginBottom: "1rem" }}>{error}</Alert>}
+        {success && <Alert severity="success" sx={{ marginBottom: "1rem" }}>Submission successful!</Alert>}
 
-        {/* Submit Button */}
         <Button
           type="submit"
           variant="contained"
@@ -237,9 +189,10 @@ const SubmissionPage = () => {
             padding: "1rem",
             fontSize: "1rem",
             fontWeight: "bold",
-            backgroundColor: "#000",
+            backgroundColor: "black",
             color: "#fff",
-            "&:hover": { backgroundColor: "#333" },
+            borderRadius: "8px",
+            '&:hover': { backgroundColor: "brown" },
           }}
           disabled={loading}
           onClick={handleSubmit}
@@ -248,10 +201,8 @@ const SubmissionPage = () => {
         </Button>
       </Box>
 
-      {/* Navbar */}
       <Navbar sx={{ marginTop: "auto" }} />
     </Box>
-
   );
 };
 

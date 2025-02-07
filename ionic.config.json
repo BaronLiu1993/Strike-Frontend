@@ -1,0 +1,7 @@
+{
+    "name": "strike",
+    "integrations": {
+      "capacitor": {}
+    },
+    "type": "react"
+  }

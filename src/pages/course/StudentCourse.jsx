@@ -186,7 +186,7 @@ const StudentCourse = () => {
 
   return (
     <div
-      className="flex flex-col items-center justify-center"
+      className="flex flex-col items-center "
       style={{
         minHeight: "100vh",
         backgroundColor: "#f5f5f5",
@@ -243,83 +243,6 @@ const StudentCourse = () => {
             </Typography>
           </Box>
         )}
-
-        <Accordion sx={{ width: "100%", marginBottom: "1.5rem" }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h5" fontWeight="bold">
-              Lessons
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {lessons && lessons.length > 0 ? (
-              lessons.map((lesson) => (
-                <Box
-                  key={lesson.id}
-                  sx={{
-                    padding: 2,
-                    border: "1px solid #ddd",
-                    borderRadius: 1,
-                    marginBottom: 2,
-                  }}
-                >
-                  <Typography variant="h6" fontWeight="bold">
-                    {lesson.title}
-                  </Typography>
-                  <Typography variant="body2">{lesson.content}</Typography>
-                </Box>
-              ))
-            ) : (
-              <Typography variant="body2" color="textSecondary">
-                No lessons available
-              </Typography>
-            )}
-          </AccordionDetails>
-        </Accordion>  
-  <Accordion sx={{ width: "100%", marginBottom: "1.5rem" }}>
-    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography variant="h5" fontWeight="bold">
-        Homework
-      </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          {homeworks && homeworks.length > 0 ? (
-            homeworks.map((homework) => (
-              <Box
-                key={homework.id}
-                sx={{
-                  padding: 2,
-                  border: "1px solid #ddd",
-                  borderRadius: 1,
-                  marginBottom: 2,
-                }}
-              >
-                <Typography variant="h6" fontWeight="bold">
-                  {homework.title}
-                </Typography>
-                <Typography variant="body2" sx={{ marginBottom: "0.5rem" }}>
-                  {homework.description}
-                </Typography>
-
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#000",
-                    color: "#fff",
-                    "&:hover": { backgroundColor: "#333" },
-                  }}
-                  onClick={() => handleHomeworkSubmission(homework.id)} // Redirect to grade submissions
-                >
-                  Submit
-                </Button>
-              </Box>
-            ))
-          ) : (
-            <Typography variant="body2" color="textSecondary">
-              No homework available
-            </Typography>
-          )}
-        </AccordionDetails>
-      </Accordion>
     <Box
       sx={{
         width: "100%",
@@ -327,7 +250,6 @@ const StudentCourse = () => {
         padding: "1rem",
         backgroundColor: "white",
         borderRadius: "10px",
-        boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
         maxHeight: "500px", 
         overflowY: "auto", 
       }}
@@ -405,6 +327,82 @@ const StudentCourse = () => {
           No posts available
         </Typography>
       )}
+    <Accordion sx={{ width: "100%", marginBottom: "1.5rem" }}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h5" fontWeight="bold">
+              Lessons
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            {lessons && lessons.length > 0 ? (
+              lessons.map((lesson) => (
+                <Box
+                  key={lesson.id}
+                  sx={{
+                    padding: 2,
+                    border: "1px solid #ddd",
+                    borderRadius: 1,
+                    marginBottom: 2,
+                  }}
+                >
+                  <Typography variant="h6" fontWeight="bold">
+                    {lesson.title}
+                  </Typography>
+                  <Typography variant="body2">{lesson.content}</Typography>
+                </Box>
+              ))
+            ) : (
+              <Typography variant="body2" color="textSecondary">
+                No lessons available
+              </Typography>
+            )}
+          </AccordionDetails>
+        </Accordion>  
+  <Accordion sx={{ width: "100%", marginBottom: "1.5rem" }}>
+    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      <Typography variant="h5" fontWeight="bold">
+        Homework
+      </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {homeworks && homeworks.length > 0 ? (
+            homeworks.map((homework) => (
+              <Box
+                key={homework.id}
+                sx={{
+                  padding: 2,
+                  border: "1px solid #ddd",
+                  borderRadius: 1,
+                  marginBottom: 2,
+                }}
+              >
+                <Typography variant="h6" fontWeight="bold">
+                  {homework.title}
+                </Typography>
+                <Typography variant="body2" sx={{ marginBottom: "0.5rem" }}>
+                  {homework.description}
+                </Typography>
+
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#000",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "#333" },
+                  }}
+                  onClick={() => handleHomeworkSubmission(homework.id)} // Redirect to grade submissions
+                >
+                  Submit
+                </Button>
+              </Box>
+            ))
+          ) : (
+            <Typography variant="body2" color="textSecondary">
+              No homework available
+            </Typography>
+          )}
+        </AccordionDetails>
+      </Accordion>
     </Box>
       <Navbar />
       </Box>

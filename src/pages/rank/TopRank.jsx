@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Box,
   Typography,
   CircularProgress,
   Alert,
-  Box,
+  Avatar,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import Navbar from '../navbar/Navbar';
 import StrikeLogo from '../../assets/strike.png'; // Replace with your logo path
@@ -19,6 +15,7 @@ function TopRank() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [students, setStudents] = useState([]);
+  const [view, setView] = useState('all-time');
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -53,67 +50,68 @@ function TopRank() {
   }, []);
 
   return (
-    <div className="font-oswald min-h-screen w-full flex flex-col items-center bg-gray-100">
+    <Box sx={{
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      paddingBottom: '64px',
+    }}>
       
-      <div className="flex-grow flex flex-col bg-white shadow-md rounded-md items-center w-full overflow-y-auto">
-        <Box
-          sx={{
-            width: '100%',
-            backgroundColor: '#000',
-            padding: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            mb: 2,
-          }}
-        >
-          <img
-            src={StrikeLogo}
-            alt="Strike Music Institute"
-            style={{ width: '100px', height: 'auto' }}
-          />
-        </Box>
-        <Typography variant="h4" gutterBottom style={{ color: '#000', textAlign: 'center' }}>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        padding: '1rem',
+        position: 'relative',
+      }}>
+        <Typography variant="h5" color="black" margin = "5" fontWeight="bold">
           Leaderboard
         </Typography>
+      </Box>
+
+
+      <Box sx={{
+        backgroundColor: 'white',
+        width: '90%',
+        maxWidth: '400px',
+        borderRadius: '16px',
+        padding: '1rem',
+      }}>
+        
         {loading ? (
           <Box display="flex" justifyContent="center" alignItems="center" height="100%">
             <CircularProgress />
           </Box>
         ) : error ? (
-          <Alert severity="error" sx={{ mt: 2 }}>
-            {error}
-          </Alert>
+          <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>
         ) : students.length > 0 ? (
-          <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{ fontWeight: 'bold', color: '#000' }}>Rank</TableCell>
-                  <TableCell style={{ fontWeight: 'bold', color: '#000' }}>Student</TableCell>
-                  <TableCell style={{ fontWeight: 'bold', color: '#000' }}>Average Grade</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {students.map((student, index) => (
-                  <TableRow key={student.id} hover>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{student.username}</TableCell>
-                    <TableCell>{student.average_grade.toFixed(2)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          students.map((student, index) => (
+            <Box key={student.id} sx={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0.8rem',
+              borderRadius: '12px',
+              backgroundColor: index % 2 === 0 ? '#f3f3f3' : 'white',
+              marginBottom: '0.5rem',
+            }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', width: '10%' }}>{index + 1}</Typography>
+              <Avatar src={student.avatar || StrikeLogo} sx={{ width: 40, height: 40, marginRight: '1rem' }} />
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{student.username}</Typography>
+                <Typography variant="body2" sx={{ color: 'gray' }}>{student.average_grade.toFixed(2)} points</Typography>
+              </Box>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : 'gray' }}>🏆</Typography>
+            </Box>
+          ))
         ) : (
-          <Alert severity="info" sx={{ mt: 2 }}>
-            No leaderboard data available
-          </Alert>
+          <Alert severity="info" sx={{ mt: 2 }}>No leaderboard data available</Alert>
         )}
-      </div>
+      </Box>
 
       <Navbar />
-    </div>
+    </Box>
   );
 }
 
