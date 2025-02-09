@@ -211,14 +211,10 @@ const TeacherCourseView = () => {
             sx={{
               marginBottom: 3,
               width: "100%",
-              padding: 2,
+              padding: 6,
               borderRadius: 2,
-              color: "white",
-              backgroundImage: `url(${Class})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
             }}
+            className = "bg-slate-300"
           >
             <Typography
               variant="h4"
@@ -404,8 +400,9 @@ const TeacherCourseView = () => {
         </Typography>
       )}
     </Box>
+
+     </Box>
       <Navbar />
-      </Box>
     </div>
   );
 };

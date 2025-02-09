@@ -93,11 +93,11 @@ function TopRank() {
               alignItems: 'center',
               padding: '0.8rem',
               borderRadius: '12px',
-              backgroundColor: index % 2 === 0 ? '#f3f3f3' : 'white',
               marginBottom: '0.5rem',
-            }}>
+            }}
+            className = "bg-slate-300"
+            >
               <Typography variant="h6" sx={{ fontWeight: 'bold', width: '10%' }}>{index + 1}</Typography>
-              <Avatar src={student.avatar || StrikeLogo} sx={{ width: 40, height: 40, marginRight: '1rem' }} />
               <Box sx={{ flex: 1 }}>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{student.username}</Typography>
                 <Typography variant="body2" sx={{ color: 'gray' }}>{student.average_grade.toFixed(2)} points</Typography>

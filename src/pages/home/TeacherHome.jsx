@@ -128,7 +128,6 @@ const TeacherHome = () => {
       className="font-poppins flex flex-col items-center bg-gray-100"
       style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
     >
-      {/* Main Content Area */}
       <div
         className="p-6 flex-grow flex flex-col bg-white shadow-md rounded-md items-center w-full"
         style={{
@@ -138,23 +137,30 @@ const TeacherHome = () => {
           paddingBottom: "64px", // Space for the navbar
         }}
       >
-        <div className="bg-black h-[4rem] w-full flex items-center px-4 rounded-t-md">
-          <img
-            src={Strike}
-            alt="Strike Music Institute Logo"
-            className="h-[3rem] w-[3rem] object-contain"
-          />
+        <div className="bg-slate-300 h-[4rem] w-full flex items-center px-4 rounded-t-md">
           <Typography
-            variant="h6"
-            component="h1"
-            style={{
-              marginLeft: "1rem",
-              color: "white",
-              fontFamily: "Poppins, sans-serif",
-            }}
-          >
-            Strike Music Institute
-          </Typography>
+                        variant="h6"
+                        component="h1"
+                        style={{
+                          marginLeft: "1rem",
+                          color: "brown",
+                          fontFamily: "Poppins, sans-serif",
+                          font: "bold"
+                        }}
+                      >
+                        Hello,
+                      </Typography>
+                      <Typography
+                        variant="h6"
+                        component="h1"
+                        style={{
+                          marginLeft: "1rem",
+                          color: "black",
+                          fontFamily: "Poppins, sans-serif",
+                        }}
+                      >
+                          Welcome to the Beta Version of Strike
+                      </Typography>
         </div>
 
         <div className="w-full mt-4">
@@ -183,14 +189,8 @@ const TeacherHome = () => {
               {courses.map((course) => (
                 <li
                   key={course.id}
-                  className="cursor-pointer border p-4 rounded hover:bg-gray-50"
-                  style={{
-                    backgroundImage: `url(${Violin})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    color: "#fff",
-                  }}
-                  onClick={() => handleCourseClick(course.id)} // Handle course click
+                  className="cursor-pointer bg-slate-300 border p-4 rounded hover:bg-gray-50"
+                  onClick={() => handleCourseClick(course.id)}
                 >
                   <Typography
                     variant="h6"

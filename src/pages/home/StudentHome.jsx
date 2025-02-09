@@ -113,7 +113,7 @@ const StudentHome = () => {
                 fontFamily: "Poppins, sans-serif",
               }}
             >
-                Welcome back to Strike!
+                Welcome to Beta Release of Strike (In Development)
             </Typography>
           </div>
   

@@ -180,13 +180,13 @@ const TeacherCourse = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          width: "100%", // Full width
-          flex: 1, // Dynamically adjusts height to fill the parent
+          width: "100%", 
+          flex: 1, 
           backgroundColor: "white",
           boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
           borderRadius: "10px",
           padding: "2rem",
-          overflow: "auto", // Allows scrolling for overflowing content
+          overflow: "auto", 
         }}
       >
         {courseDetails && (
@@ -194,14 +194,11 @@ const TeacherCourse = () => {
             sx={{
               marginBottom: 3,
               width: "100%",
-              padding: 2,
+              padding: 6,
               borderRadius: 2,
-              color: "white",
-              backgroundImage: `url(${Class})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
+      
             }}
+            className = "bg-slate-300"
           >
             <Typography
               variant="h4"
