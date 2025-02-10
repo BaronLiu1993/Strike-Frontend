@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, NavLink } from "react-router-dom";
 import {
   Typography,
   Button,
@@ -9,8 +9,7 @@ import {
   CssBaseline,
   Alert,
 } from "@mui/material";
-import { FilePicker } from "@capawesome/capacitor-file-picker";
-import { Permissions } from "@capacitor/permissions";
+import StrikeLogo from "../../assets/strike.png"; // Replace with the correct path to your logo
 import Navbar from "../navbar/Navbar";
 
 const SubmissionPage = () => {
@@ -26,17 +25,13 @@ const SubmissionPage = () => {
   useEffect(() => {
     const fetchStudentId = async () => {
       try {
-        const response = await fetch(
-          "https://strikeapp-fb52132f9a0c.herokuapp.com/register/student/",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            credentials: "include",
-          }
-        );
+        const response = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/register/student/", {
+          method: "GET",
+          headers: { "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+           },
+          credentials: "include",
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch user information. Please log in.");
@@ -55,25 +50,8 @@ const SubmissionPage = () => {
     fetchStudentId();
   }, []);
 
-  const requestPermissions = async () => {
-    await Permissions.requestPermissions();
-  };
-
-  const pickFile = async () => {
-    try {
-      await requestPermissions();
-      const result = await FilePicker.pickFiles({
-        multiple: false,
-        types: ["video/*"],
-      });
-
-      if (result.files.length > 0) {
-        setVideo(result.files[0]);
-      }
-    } catch (error) {
-      console.error("File selection failed:", error);
-      setError("Failed to select file. Please try again.");
-    }
+  const handleVideoChange = (e) => {
+    setVideo(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
@@ -82,18 +60,15 @@ const SubmissionPage = () => {
     setError(null);
     setSuccess(false);
 
+    const formData = new FormData();
+    formData.append("submission_video", video || "");
+    formData.append("submission_text", text || "");
+
     if (!studentId) {
       setError("Unable to submit homework. User information not found.");
       setLoading(false);
       return;
     }
-
-    const formData = new FormData();
-    if (video) {
-      const fileBlob = new Blob([video.blob], { type: video.mimeType });
-      formData.append("submission_video", fileBlob, video.name);
-    }
-    formData.append("submission_text", text || "");
 
     try {
       const response = await fetch(
@@ -126,16 +101,44 @@ const SubmissionPage = () => {
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#f5f5f5" }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
+      <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            backgroundColor: "#f5f5f5",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
 
-  return (
-    <Box sx={{ width: "100vw", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", paddingBottom: "64px" }}>
+    return (
+      <Box
+      sx={{
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingBottom: "64px",
+      }}
+    >
       <CssBaseline />
-      <Box sx={{ width: "90%", maxWidth: "400px", backgroundColor: "#fff", borderRadius: "16px", padding: "2rem", textAlign: "center" }}>
+      <Box
+        sx={{
+          width: "90%",
+          maxWidth: "400px",
+          backgroundColor: "#fff",
+          borderRadius: "16px",
+          padding: "2rem",
+          textAlign: "center",
+        }}
+      >
+
         <Typography variant="h5" fontWeight="bold" color="black">
           Submit Homework
         </Typography>
@@ -143,19 +146,58 @@ const SubmissionPage = () => {
           Upload your video or provide a text annotation for your homework.
         </Typography>
 
-        <Button variant="contained" fullWidth onClick={pickFile} sx={{ backgroundColor: "black", color: "#fff", textTransform: "none", fontWeight: "bold", borderRadius: "8px", marginBottom: "1rem", '&:hover': { backgroundColor: "brown" } }}>
-          {video ? video.name : "Pick Video File"}
+        <Button
+          variant="contained"
+          component="label"
+          fullWidth
+          sx={{
+            backgroundColor: "black",
+            color: "#fff",
+            textTransform: "none",
+            fontWeight: "bold",
+            borderRadius: "8px",
+            marginBottom: "1rem",
+            '&:hover': { backgroundColor: "brown" },
+          }}
+        >
+          {video ? video.name : "Upload Video"}
+          <input type="file" accept="video/*" hidden onChange={handleVideoChange} />
         </Button>
 
-        <TextField fullWidth label="Text Annotation" variant="outlined" multiline rows={4} value={text} onChange={(e) => setText(e.target.value)} sx={{ marginBottom: "1rem", backgroundColor: "#f5f5f5", borderRadius: "8px" }} />
+        <TextField
+          fullWidth
+          label="Text Annotation"
+          variant="outlined"
+          multiline
+          rows={4}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          sx={{ marginBottom: "1rem", backgroundColor: "#f5f5f5", borderRadius: "8px" }}
+        />
 
         {error && <Alert severity="error" sx={{ marginBottom: "1rem" }}>{error}</Alert>}
         {success && <Alert severity="success" sx={{ marginBottom: "1rem" }}>Submission successful!</Alert>}
 
-        <Button type="submit" variant="contained" fullWidth onClick={handleSubmit} sx={{ padding: "1rem", fontSize: "1rem", fontWeight: "bold", backgroundColor: "black", color: "#fff", borderRadius: "8px", '&:hover': { backgroundColor: "brown" } }} disabled={loading}>
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          sx={{
+            padding: "1rem",
+            fontSize: "1rem",
+            fontWeight: "bold",
+            backgroundColor: "black",
+            color: "#fff",
+            borderRadius: "8px",
+            '&:hover': { backgroundColor: "brown" },
+          }}
+          disabled={loading}
+          onClick={handleSubmit}
+        >
           {loading ? <CircularProgress size={24} color="inherit" /> : "Submit"}
         </Button>
       </Box>
+
       <Navbar sx={{ marginTop: "auto" }} />
     </Box>
   );

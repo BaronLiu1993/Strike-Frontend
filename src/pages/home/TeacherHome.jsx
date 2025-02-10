@@ -131,10 +131,10 @@ const TeacherHome = () => {
       <div
         className="p-6 flex-grow flex flex-col bg-white shadow-md rounded-md items-center w-full"
         style={{
-          flex: 1, // Makes the content area take all available space
+          flex: 1, 
           width: "100%",
-          overflowY: "auto", // Allows scrolling for long content
-          paddingBottom: "64px", // Space for the navbar
+          overflowY: "auto", 
+          paddingBottom: "64px", 
         }}
       >
         <div className="bg-slate-300 h-[4rem] w-full flex items-center px-4 rounded-t-md">
@@ -148,7 +148,7 @@ const TeacherHome = () => {
                           font: "bold"
                         }}
                       >
-                        Hello,
+                        Strike, 
                       </Typography>
                       <Typography
                         variant="h6"
@@ -159,7 +159,7 @@ const TeacherHome = () => {
                           fontFamily: "Poppins, sans-serif",
                         }}
                       >
-                          Welcome to the Beta Version of Strike
+                        Beta Release
                       </Typography>
         </div>
 

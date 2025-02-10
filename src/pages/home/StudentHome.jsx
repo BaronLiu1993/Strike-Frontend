@@ -102,7 +102,7 @@ const StudentHome = () => {
                 font: "bold"
               }}
             >
-              Hello,
+              Strike,
             </Typography>
             <Typography
               variant="h6"
@@ -113,7 +113,7 @@ const StudentHome = () => {
                 fontFamily: "Poppins, sans-serif",
               }}
             >
-                Welcome to Beta Release of Strike (In Development)
+                Beta Release
             </Typography>
           </div>
   
