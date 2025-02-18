@@ -131,7 +131,6 @@ const StudentHome = () => {
 
                     <div className="flex flex-col">
                       <div
-                        variant="h6"
                         className="font-semibold rounded"
                         style={{
                           fontFamily: "Poppins, sans-serif",
@@ -140,7 +139,6 @@ const StudentHome = () => {
                         {course.title}
                       </div>
                       <div
-                        variant="body2"
                         className="p-2 rounded"
                         style={{
                           fontFamily: "Poppins, sans-serif",

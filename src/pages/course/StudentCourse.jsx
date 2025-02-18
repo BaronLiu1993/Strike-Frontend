@@ -5,19 +5,12 @@ import {
   CircularProgress,
   Alert,
   Box,
-  Button,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Card,
   CardContent,
-  CardHeader,
   Avatar,
-  Divider,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Navbar from "../navbar/Navbar";
-import Class from "../../assets/class.jpg";
+import ArticleIcon from '@mui/icons-material/Article';
+import SchoolIcon from '@mui/icons-material/School';
 
 const StudentCourse = () => {
   const { courseId } = useParams();
@@ -187,101 +180,96 @@ const StudentCourse = () => {
   return (
     <div
       className="flex flex-col items-center "
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
-        display: "flex",
-        flexDirection: "column",
-      }}
     >
+
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
           width: "100%",
           backgroundColor: "white",
-          boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
           borderRadius: "10px",
           padding: "2rem",
           flexGrow: 1,
         }}
       >
         {courseDetails && (
-          <Box
-            sx={{
-              marginBottom: 3,
-              width: "100%",
-              padding: 2,
-              borderRadius: 2,
-              color: "white",
-              backgroundImage: `url(${Class})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
+          <div
+            className="cursor-pointer border flex flex-col justify-center rounded-2xl p-4 hover:bg-gray-50 w-full shadow-md hover:shadow-2xl h-[15rem]"
+            
           >
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: "bold",
-                marginBottom: "0.5rem",
-                textShadow: "0 2px 4px rgba(0, 0, 0, 0.7)",
+            <h1
+              className="font-semibold text-4xl rounded"
+              style={{
+                fontFamily: "Poppins, sans-serif",
+                color: "#3f51b5",
+                
               }}
+              
             >
               {courseDetails.title}
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: "rgba(255, 255, 255, 0.9)",
-                textShadow: "0 1px 3px rgba(0, 0, 0, 0.7)",
+            </h1>
+            <h2
+              className="font-semibold rounded"
+              style={{
+                fontFamily: "Poppins, sans-serif",
               }}
             >
               {courseDetails.description}
-            </Typography>
-          </Box>
+            </h2>
+          </div>
         )}
-    <Box
-      sx={{
-        width: "100%",
-        marginTop: "2rem",
-        padding: "1rem",
-        backgroundColor: "white",
-        borderRadius: "10px",
-        maxHeight: "500px", 
-        overflowY: "auto", 
-      }}
-    >
-      <Typography
-        variant="h5"
-        fontWeight="bold"
-        sx={{ marginBottom: "1rem", textAlign: "center" }}
-      >
-        Posts Feed
-      </Typography>
 
+  <div className = "flex mt-[5rem] ">
+    <div className = "flex flex-col mb-[2rem] space-y-5">
+              <div
+                className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl h-[4rem]"
+                  style={{
+                  color: "#3f51b5",
+                      }}
+                    >
+                      <SchoolIcon style={{ fontSize: "2rem" }} />
+                      <div className="flex flex-col m-2">
+                        <div
+                          className="font-semibold rounded w-[5rem]"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                            Lessons
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl h-[4rem]"
+                  style={{
+                  color: "#3f51b5",
+                      }}
+                    >
+                      <ArticleIcon style={{ fontSize: "2rem" }} />
+                      <div className="flex flex-col m-2">
+                        <div
+                          className="font-semibold rounded w-[5rem]"
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                            Homework
+                        </div>
+                      </div>
+                    </div>
+        </div>
+    <div className = "w-[20rem] ml-[2rem]">
       {posts && posts.length > 0 ? (
         posts.map((post) => (
-          <Card
+          <div
             key={post.id}
-            sx={{
-              marginBottom: 2,
-              border: "1px solid #ddd",
-              borderRadius: "10px",
-              overflow: "hidden",
-              display: "flex",
-              flexDirection: "column",
-            }}
+            className = "w-full border-2 rounded-2xl overflow-hidden flex flex-col"
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                padding: "0.5rem 1rem",
-                borderBottom: "1px solid #eee",
-              }}
+            <div
+            className = "p-[1rem] border-b-[2px] border-[#eee] flex items-center"
+              
             >
               <Avatar
                 sx={{
@@ -290,33 +278,47 @@ const StudentCourse = () => {
                   textTransform: "uppercase",
                 }}
               >
-                {post.author ? post.author[0] : "?"}
+                {post.author ? post.author[0] : "DC"}
               </Avatar>
               <Box>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ fontWeight: "bold", lineHeight: 1.2 }}
+                <h1
+                  className = "font-bold text-xl m-2"
+                  style={{
+                    fontFamily: "Poppins, sans-serif",
+                    color: "#3f51b5",
+                  }}
                 >
                   {"Davis Chow"}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{ color: "gray", lineHeight: 1.2 }}
+                </h1>
+                <h2
+                  style={{
+                    fontFamily: "Poppins, sans-serif",
+                    color: "#3f51b5",
+                }}
+                  className = "ml-2"
                 >
                   {new Date(post.created_at).toLocaleString()}
-                </Typography>
+                </h2>
               </Box>
-            </Box>
+            </div>
 
             <CardContent>
-              <Typography variant="body1" sx={{ marginBottom: "0.5rem" }}>
+              <h2 
+              className = "font-bold text-xl m-2"
+              style={{
+                fontFamily: "Poppins, sans-serif",                
+              }} >
                 {post.title}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
+              </h2>
+              <h2 
+              className = "ml-2"
+              style={{
+                fontFamily: "Poppins, sans-serif",
+              }}>
                 {post.content}
-              </Typography>
+              </h2>
             </CardContent>
-          </Card>
+          </div>
         ))
       ) : (
         <Typography
@@ -327,83 +329,9 @@ const StudentCourse = () => {
           No posts available
         </Typography>
       )}
-    <Accordion sx={{ width: "100%", marginBottom: "1.5rem" }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h5" fontWeight="bold">
-              Lessons
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {lessons && lessons.length > 0 ? (
-              lessons.map((lesson) => (
-                <Box
-                  key={lesson.id}
-                  sx={{
-                    padding: 2,
-                    border: "1px solid #ddd",
-                    borderRadius: 1,
-                    marginBottom: 2,
-                  }}
-                >
-                  <Typography variant="h6" fontWeight="bold">
-                    {lesson.title}
-                  </Typography>
-                  <Typography variant="body2">{lesson.content}</Typography>
-                </Box>
-              ))
-            ) : (
-              <Typography variant="body2" color="textSecondary">
-                No lessons available
-              </Typography>
-            )}
-          </AccordionDetails>
-        </Accordion>  
-  <Accordion sx={{ width: "100%", marginBottom: "1.5rem" }}>
-    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography variant="h5" fontWeight="bold">
-        Homework
-      </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          {homeworks && homeworks.length > 0 ? (
-            homeworks.map((homework) => (
-              <Box
-                key={homework.id}
-                sx={{
-                  padding: 2,
-                  border: "1px solid #ddd",
-                  borderRadius: 1,
-                  marginBottom: 2,
-                }}
-              >
-                <Typography variant="h6" fontWeight="bold">
-                  {homework.title}
-                </Typography>
-                <Typography variant="body2" sx={{ marginBottom: "0.5rem" }}>
-                  {homework.description}
-                </Typography>
-
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#000",
-                    color: "#fff",
-                    "&:hover": { backgroundColor: "#333" },
-                  }}
-                  onClick={() => handleHomeworkSubmission(homework.id)} // Redirect to grade submissions
-                >
-                  Submit
-                </Button>
-              </Box>
-            ))
-          ) : (
-            <Typography variant="body2" color="textSecondary">
-              No homework available
-            </Typography>
-          )}
-        </AccordionDetails>
-      </Accordion>
-    </Box>
+    </div>
+  </div>
+      
       <Navbar />
       </Box>
     </div>
