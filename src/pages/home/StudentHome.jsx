@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Violin from '../../assets/violin.jpg';
 import Navbar from '../navbar/Navbar';
-import Strike from '../../assets/strike.png';
 import { Typography, CssBaseline, CircularProgress, Box } from '@mui/material';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import GradeIcon from '@mui/icons-material/Grade';
+import ScoreboardIcon from '@mui/icons-material/Scoreboard';
 import '@fontsource/poppins'; 
 
 const StudentHome = () => {
@@ -79,8 +80,8 @@ const StudentHome = () => {
     <>
       <CssBaseline />
       <div
-        className="font-poppins flex flex-col items-center bg-gray-300"
-        style={{ minHeight: "100vh", paddingBottom: "64px" }} // Reserve space for Navbar
+        className="font-poppins flex flex-col items-center"
+        style={{ minHeight: "100vh", paddingBottom: "64px" }}
       >
         <div
           className="p-6 flex-grow flex flex-col bg-white shadow-md rounded-md items-center w-full"
@@ -90,34 +91,26 @@ const StudentHome = () => {
             paddingBottom: "64px", 
           }}
         >
-          <div className="bg-slate-200 h-[4rem] w-full flex justify-center items-center px-4 rounded-t-md">
-            
-            <Typography
-              variant="h6"
-              component="h1"
+          <div className="h-[4rem] w-full flex items-center px-4 rounded-t-md">
+            <div
+              className = "text-4xl text-[#3f51b5] ml-[1rem] font-extrabold"
               style={{
-                marginLeft: "1rem",
-                color: "brown",
-                fontFamily: "Poppins, sans-serif",
-                font: "bold"
-              }}
-            >
-              Strike,
-            </Typography>
-            <Typography
-              variant="h6"
-              component="h1"
-              style={{
-                marginLeft: "1rem",
-                color: "black",
                 fontFamily: "Poppins, sans-serif",
               }}
             >
-                Beta Release
-            </Typography>
+              Welcome
+            </div>
+            <div
+              className = "ml-[0.5rem] text-4xl font-extrabold"
+              style={{
+                marginLeft: "0.5rem",
+                fontFamily: "Poppins, sans-serif",
+              }}
+            >
+              Back to Strike
+            </div>
           </div>
   
-          {/* Courses Section */}
           <div className="w-full mt-4">
             {courses.length === 0 ? (
               <Typography variant="body1" color="textSecondary">
@@ -129,40 +122,96 @@ const StudentHome = () => {
                   <li
                     key={course.id}
                     onClick={() => handleCourseClick(course.id)}
-                    className="cursor-pointer border p-4 rounded hover:bg-gray-50"
+                    className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl h-[15rem]"
                     style={{
-                      backgroundImage: `url(${Violin})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      color: "#fff",
+                      color: "#3f51b5",
                     }}
                   >
-                    <Typography
-                      variant="h6"
-                      className="font-semibold p-2 rounded"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
-                    >
-                      {course.title}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      className="p-2 rounded"
-                      style={{
-                        fontFamily: "Poppins, sans-serif",
-                      }}
-                    >
-                      {course.description}
-                    </Typography>
+                    <MusicNoteIcon style={{ fontSize: "6rem" }} />
+
+                    <div className="flex flex-col">
+                      <div
+                        variant="h6"
+                        className="font-semibold rounded"
+                        style={{
+                          fontFamily: "Poppins, sans-serif",
+                        }}
+                      >
+                        {course.title}
+                      </div>
+                      <div
+                        variant="body2"
+                        className="p-2 rounded"
+                        style={{
+                          fontFamily: "Poppins, sans-serif",
+                        }}
+                      >
+                        {course.description}
+                      </div>
+                    </div>
                   </li>
                 ))}
               </ul>
             )}
           </div>
+        <div className = "flex flex-row w-full justify-center items-center space-x-[3rem] mt-[4rem]">
+          <div
+              className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl h-[15rem]"
+                style={{
+                color: "#3f51b5",
+                    }}
+                  >
+                    <GradeIcon style={{ fontSize: "6rem" }} />
+                    <div className="flex flex-col ml-[2rem]">
+                      <div
+                        className="font-semibold rounded w-[8rem]"
+                        style={{
+                          fontFamily: "Poppins, sans-serif",
+                        }}
+                      >
+                          Grades
+                      </div>
+                      <div
+                        className = "font-bold text-6xl"
+                        style={{
+                          fontFamily: "Poppins, sans-serif",
+                        }}
+                      >
+                          98
+                      </div>
+                    </div>
+                  </div>
+                  <div
+              className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl h-[15rem]"
+                style={{
+                color: "#3f51b5",
+                    }}
+                  >
+                    <ScoreboardIcon style={{ fontSize: "6rem" }} />
+
+                    <div className="flex flex-col ml-[2rem]">
+                      <div
+                        variant="h6"
+                        className="font-semibold w-[8rem] rounded"
+                        style={{
+                          fontFamily: "Poppins, sans-serif",
+                        }}
+                      >
+                        Strike Points
+                      </div>
+                      <div
+                        className = "font-bold text-6xl"
+                        style={{
+                          fontFamily: "Poppins, sans-serif",
+                        }}
+                      >
+                          1000
+                      </div>
+                    </div>
+                  </div>
+          </div>
+          
         </div>
-  
-        {/* Navbar */}
         <Navbar />
       </div>
     </>

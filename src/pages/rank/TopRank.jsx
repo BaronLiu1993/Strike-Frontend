@@ -4,12 +4,10 @@ import {
   Typography,
   CircularProgress,
   Alert,
-  Avatar,
-  ToggleButton,
-  ToggleButtonGroup,
 } from '@mui/material';
 import Navbar from '../navbar/Navbar';
-import StrikeLogo from '../../assets/strike.png'; // Replace with your logo path
+import '@fontsource/poppins'; 
+
 
 function TopRank() {
   const [loading, setLoading] = useState(false);
@@ -66,9 +64,13 @@ function TopRank() {
         padding: '1rem',
         position: 'relative',
       }}>
-        <Typography variant="h5" color="black" margin = "5" fontWeight="bold">
+        <div 
+        className = "font-poppins text-4xl font-bold text-[#3f51b5]"
+        style={{
+                fontFamily: "Poppins, sans-serif",
+              }} >
           Leaderboard
-        </Typography>
+        </div>
       </Box>
 
 
@@ -95,14 +97,23 @@ function TopRank() {
               borderRadius: '12px',
               marginBottom: '0.5rem',
             }}
-            className = "bg-slate-300"
+            className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl"
+              style={{
+                  color: "#3f51b5",
+                  fontFamily: "Poppins, sans-serif",}}
             >
               <Typography variant="h6" sx={{ fontWeight: 'bold', width: '10%' }}>{index + 1}</Typography>
               <Box sx={{ flex: 1 }}>
-                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{student.username}</Typography>
-                <Typography variant="body2" sx={{ color: 'gray' }}>{student.average_grade.toFixed(2)} points</Typography>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }} style={{
+                  color: "#3f51b5",
+                  fontFamily: "Poppins, sans-serif",}}>{student.username}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'gray' }} style={{
+                  color: "#3f51b5",
+                  fontFamily: "Poppins, sans-serif",}}>
+                    {student.average_grade.toFixed(2)} points</Typography>
               </Box>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', color: index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : 'gray' }}>🏆</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : 'gray' }}></Typography>
             </Box>
           ))
         ) : (

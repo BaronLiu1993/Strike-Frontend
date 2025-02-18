@@ -61,7 +61,7 @@ const TeacherHome = () => {
   }, []);
 
   const handleCourseClick = (courseId) => {
-    navigate(`/course-teacher/${courseId}`); // Navigate to the course details page
+    navigate(`/course-teacher/${courseId}`); 
   };
 
   const handleCreateCourse = async () => {
