@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, NavLink } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Typography,
-  Button,
-  TextField,
   Box,
   CircularProgress,
-  CssBaseline,
   Alert,
+  TextField,
+  Button
 } from "@mui/material";
-import StrikeLogo from "../../assets/strike.png"; // Replace with the correct path to your logo
-import Navbar from "../navbar/Navbar";
+import { motion } from "framer-motion";
+import CloudIcon from "@mui/icons-material/Cloud";
+import "@fontsource/poppins";
 
 const SubmissionPage = () => {
   const { homeworkId, courseId } = useParams();
@@ -18,57 +18,60 @@ const SubmissionPage = () => {
   const [video, setVideo] = useState(null);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchStudentId = async () => {
+    const fetchStudentData = async () => {
       try {
         const response = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/register/student/", {
           method: "GET",
-          headers: { "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
-           },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
           credentials: "include",
         });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch user information. Please log in.");
-        }
+        if (!response.ok) throw new Error("Failed to fetch user info. Please log in.");
 
         const data = await response.json();
         setStudentId(data.student_id);
       } catch (err) {
-        console.error("Error fetching student ID:", err);
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchStudentId();
+    fetchStudentData();
   }, []);
 
   const handleVideoChange = (e) => {
     setVideo(e.target.files[0]);
   };
 
+  const handleDeleteVideo = () => {
+    setVideo(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setUploading(true);
     setError(null);
     setSuccess(false);
+
+    if (!studentId) {
+      setError("Unable to submit homework. User information not found.");
+      setUploading(false);
+      return;
+    }
 
     const formData = new FormData();
     formData.append("submission_video", video || "");
     formData.append("submission_text", text || "");
-
-    if (!studentId) {
-      setError("Unable to submit homework. User information not found.");
-      setLoading(false);
-      return;
-    }
 
     try {
       const response = await fetch(
@@ -77,129 +80,144 @@ const SubmissionPage = () => {
           method: "POST",
           body: formData,
           credentials: "include",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
         }
       );
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          errorData.detail || "Failed to submit homework. Please try again."
-        );
+        throw new Error(errorData.detail || "Failed to submit homework. Please try again.");
       }
 
       setSuccess(true);
-      navigate(`/student-home`);
+      setTimeout(() => navigate(`/student-home`));
     } catch (err) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      setUploading(false);
     }
   };
 
   if (loading) {
     return (
-      <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-            backgroundColor: "#f5f5f5",
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      );
+      <Box className="flex justify-center items-center min-h-screen bg-gray-100">
+        <CircularProgress size={50} sx={{ color: "#3f51b5" }} />
+      </Box>
+    );
+  }
+
+  if (error) {
+      const navigate = useNavigate();
+    
+      useEffect(() => {
+        navigate("/login"); 
+      }, [navigate]);
+    
+      return null; 
     }
 
-    return (
-      <Box
-      sx={{
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingBottom: "64px",
-      }}
+  return (
+    <motion.div
+      className="flex flex-col justify-between items-center p-6 space-y-6 min-h-screen"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      <CssBaseline />
-      <Box
+      <div className="w-full max-w-lg space-y-6">
+        <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", fontWeight: "bold" }}>
+          Your Work
+        </Typography>
+
+        {error && (
+          <Alert severity="error" sx={{ width: "100%" }}>
+            {error}
+          </Alert>
+        )}
+
+        {success && (
+          <Alert severity="success" sx={{ width: "100%" }}>
+            Submission successful!
+          </Alert>
+        )}
+
+        <motion.div className="space-y-6">
+          <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif", fontWeight: "bold" }}>
+            Attachments
+          </Typography>
+
+          <div className="flex flex-col items-center justify-between">
+            {video ? (
+              <motion.div className="border flex items-center justify-between rounded-2xl p-4 h-[6rem] w-full">
+                <div className = "flex flex-col">
+                  <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5" }}>
+                    {video.name}
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif", color: "#666" }}>
+                    File Size: {(video.size / 1024 / 1024).toFixed(2)} MB
+                  </Typography>
+                </div>
+                <div>
+                  <Button onClick={handleDeleteVideo} sx={{ ml: 2 }}>Delete</Button>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div className="flex flex-col items-center">
+                <CloudIcon sx={{ color: "#3f51b5", fontSize: "8rem" }} />
+                <Typography variant="body1" sx={{ fontFamily: "Poppins, sans-serif", color: "#666", mt: 2 }}>
+                  No attachments uploaded.
+                </Typography>
+              </motion.div>
+            )}
+          </div>
+          <TextField
+        fullWidth
+        multiline
+        minRows={3}
+        variant="outlined"
+        label="Add Annotations (Optional)"
+        placeholder="Add a Comment here..."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
         sx={{
-          width: "90%",
-          maxWidth: "400px",
-          backgroundColor: "#fff",
-          borderRadius: "16px",
-          padding: "2rem",
-          textAlign: "center",
+          fontFamily: "Poppins, sans-serif",
+          "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+          "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" }, 
         }}
-      >
+      />
+        </motion.div>
+      </div>
+      
 
-        <Typography variant="h5" fontWeight="bold" color="black">
-          Submit Homework
-        </Typography>
-        <Typography variant="body2" color="textSecondary" sx={{ marginBottom: "1.5rem" }}>
-          Upload your video or provide a text annotation for your homework.
-        </Typography>
 
-        <Button
-          variant="contained"
-          component="label"
-          fullWidth
-          sx={{
-            backgroundColor: "black",
-            color: "#fff",
-            textTransform: "none",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            marginBottom: "1rem",
-            '&:hover': { backgroundColor: "brown" },
-          }}
-        >
-          {video ? video.name : "Upload Video"}
-          <input type="file" accept="video/*" hidden onChange={handleVideoChange} />
-        </Button>
 
-        <TextField
-          fullWidth
-          label="Text Annotation"
-          variant="outlined"
-          multiline
-          rows={4}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          sx={{ marginBottom: "1rem", backgroundColor: "#f5f5f5", borderRadius: "8px" }}
-        />
 
-        {error && <Alert severity="error" sx={{ marginBottom: "1rem" }}>{error}</Alert>}
-        {success && <Alert severity="success" sx={{ marginBottom: "1rem" }}>Submission successful!</Alert>}
-
-        <Button
-          type="submit"
-          variant="contained"
-          fullWidth
-          sx={{
-            padding: "1rem",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            backgroundColor: "black",
-            color: "#fff",
-            borderRadius: "8px",
-            '&:hover': { backgroundColor: "brown" },
-          }}
-          disabled={loading}
-          onClick={handleSubmit}
-        >
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Submit"}
-        </Button>
-      </Box>
-
-      <Navbar sx={{ marginTop: "auto" }} />
-    </Box>
+      <motion.div className="w-full max-w-lg">
+        {uploading ? (
+          <div className="flex justify-center">
+            <CircularProgress size={35} sx={{ color: "#4CAF50" }} />
+            <Typography variant="body1" sx={{ ml: 2, fontFamily: "Poppins, sans-serif", color: "#4CAF50" }}>
+              Uploading...
+            </Typography>
+          </div>
+        ) : video ? (
+          <motion.button
+            style={{ fontFamily: "Poppins, sans-serif" }}
+            onClick={handleSubmit}
+            className="w-full bg-green-500 text-white py-3 rounded-lg text-lg cursor-pointer"
+          >
+            Upload Video
+          </motion.button>
+        ) : (
+          <motion.label
+            style={{ fontFamily: "Poppins, sans-serif" }}
+            className="w-full bg-[#3f51b5] text-white py-3 rounded-lg text-lg text-center cursor-pointer block"
+          >
+            Select Video
+            <input type="file" onChange={handleVideoChange} accept="video/*" className="hidden" />
+          </motion.label>
+        )}
+      </motion.div>
+    </motion.div>
   );
 };
 

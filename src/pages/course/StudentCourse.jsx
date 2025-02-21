@@ -8,14 +8,14 @@ import {
   CardContent,
   Avatar,
 } from "@mui/material";
-import Navbar from "../navbar/Navbar";
-import ArticleIcon from '@mui/icons-material/Article';
-import SchoolIcon from '@mui/icons-material/School';
+import { motion } from "framer-motion";
+import ArticleIcon from "@mui/icons-material/Article";
+import SchoolIcon from "@mui/icons-material/School";
 
 const StudentCourse = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [courseDetails, setCourseDetails] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -26,111 +26,40 @@ const StudentCourse = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        const accessToken = localStorage.getItem("access_token");
 
-        const courseResponse = await fetch(
+        const urls = [
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/${courseId}/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            credentials: "include",
-          }
-        );
-
-        if (!courseResponse.ok) {
-          throw new Error("Failed to fetch course details");
-        }
-
-        const courseData = await courseResponse.json();
-        setCourseDetails(courseData);
-
-        const postsResponse = await fetch(
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/posts/${courseId}/posts/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            credentials: "include",
-          }
-        );
-
-        if (!postsResponse.ok) {
-          throw new Error("Failed to fetch posts");
-        }
-
-        const postsData = await postsResponse.json();
-        setPosts(postsData || []);
-
-        const lessonsResponse = await fetch(
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/lesson/${courseId}/lessons/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            credentials: "include",
-          }
-        );
-
-        if (!lessonsResponse.ok) {
-          throw new Error("Failed to fetch lessons");
-        }
-
-        const lessonsData = await lessonsResponse.json();
-        setLessons(lessonsData || []);
-
-        const homeworkResponse = await fetch(
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/homework/${courseId}/homeworks/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            credentials: "include",
-          }
+        ];
+
+        const responses = await Promise.all(
+          urls.map((url) =>
+            fetch(url, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
+              credentials: "include",
+            })
+          )
         );
 
-        if (!homeworkResponse.ok) {
-          throw new Error("Failed to fetch homework");
+        if (responses.some((res) => !res.ok)) {
+          throw new Error("Failed to fetch course data");
         }
 
-        const homeworkData = await homeworkResponse.json();
-
-        const updatedHomeworks = await Promise.all(
-          (homeworkData || []).map(async (homework) => {
-            if (homework.graded && homework.submission_id) {
-              try {
-                const gradeResponse = await fetch(
-                  `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/submission/${courseId}/${homework.id}/students/${homework.student_id}/submission/${homework.submission_id}/grade/`,
-                  {
-                    method: "GET",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-                    },
-                    credentials: "include",
-                  }
-                );
-
-                if (gradeResponse.ok) {
-                  const gradeData = await gradeResponse.json();
-                  return { ...homework, grade: gradeData.grade };
-                }
-              } catch (error) {
-                console.error("Failed to fetch grade", error);
-              }
-            }
-            return homework;
-          })
+        const [courseData, postsData, lessonsData, homeworkData] = await Promise.all(
+          responses.map((res) => res.json())
         );
 
-        setHomeworks(updatedHomeworks || []);
+        setCourseDetails(courseData);
+        setPosts(postsData || []);
+        setLessons(lessonsData || []);
+        setHomeworks(homeworkData || []);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -141,200 +70,122 @@ const StudentCourse = () => {
     fetchData();
   }, [courseId]);
 
-  const handleHomeworkSubmission = (homeworkId) => {
-    navigate(`/submission/${courseId}/${homeworkId}`);
+  const handleSwipe = (event, info) => {
+    if (info.offset.x > 100) navigate(-1);
+    if (info.offset.x < -100) navigate(1);
   };
+
+  const handleNavigation = (path) => navigate(path);
 
   if (loading) {
     return (
       <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-          backgroundColor: "#f5f5f5",
-        }}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", backgroundColor: "#f5f5f5" }}
       >
-        <CircularProgress />
+        <CircularProgress size={50} sx={{ color: "#3f51b5" }} />
       </Box>
     );
   }
 
   if (error) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-          backgroundColor: "#f5f5f5",
-        }}
-      >
-        <Alert severity="error">{error}</Alert>
-      </Box>
-    );
+    const navigate = useNavigate();
+    useEffect(() => {
+      navigate("/login"); 
+    }, [navigate]);
+    return null; 
   }
 
   return (
-    <div
-      className="flex flex-col items-center "
+    <motion.div
+      className="flex flex-col items-center"
+      style={{ minHeight: "100vh", paddingBottom: "64px", overflow: "hidden" }}
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      onDragEnd={handleSwipe}
     >
-
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          backgroundColor: "white",
-          borderRadius: "10px",
-          padding: "2rem",
-          flexGrow: 1,
-        }}
+      <motion.div
+        className="p-6 flex-grow flex flex-col bg-white rounded-md items-center w-full mt-[3rem]"
+        style={{ flex: 1, overflowY: "auto", paddingBottom: "64px" }}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
       >
         {courseDetails && (
-          <div
-            className="cursor-pointer border flex flex-col justify-center rounded-2xl p-4 hover:bg-gray-50 w-full shadow-md hover:shadow-2xl h-[15rem]"
-            
+          <motion.div
+            className="border flex flex-col justify-center rounded-2xl p-4 w-full"
           >
-            <h1
-              className="font-semibold text-4xl rounded"
-              style={{
-                fontFamily: "Poppins, sans-serif",
-                color: "#3f51b5",
-                
-              }}
-              
-            >
+            <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", textAlign: "center" }}>
               {courseDetails.title}
-            </h1>
-            <h2
-              className="font-semibold rounded"
-              style={{
-                fontFamily: "Poppins, sans-serif",
-              }}
-            >
+            </Typography>
+            <Typography variant="body1" sx={{ fontFamily: "Poppins, sans-serif", textAlign: "center" }}>
               {courseDetails.description}
-            </h2>
-          </div>
+            </Typography>
+          </motion.div>
         )}
 
-  <div className = "flex mt-[5rem] ">
-    <div className = "flex flex-col mb-[2rem] space-y-5">
-              <div
-                className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl h-[4rem]"
-                  style={{
-                  color: "#3f51b5",
-                      }}
-                    >
-                      <SchoolIcon style={{ fontSize: "2rem" }} />
-                      <div className="flex flex-col m-2">
-                        <div
-                          className="font-semibold rounded w-[5rem]"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                            Lessons
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl h-[4rem]"
-                  style={{
-                  color: "#3f51b5",
-                      }}
-                    >
-                      <ArticleIcon style={{ fontSize: "2rem" }} />
-                      <div className="flex flex-col m-2">
-                        <div
-                          className="font-semibold rounded w-[5rem]"
-                          style={{
-                            fontFamily: "Poppins, sans-serif",
-                          }}
-                        >
-                            Homework
-                        </div>
-                      </div>
-                    </div>
-        </div>
-    <div className = "w-[20rem] ml-[2rem]">
-      {posts && posts.length > 0 ? (
-        posts.map((post) => (
-          <div
-            key={post.id}
-            className = "w-full border-2 rounded-2xl overflow-hidden flex flex-col"
+        <motion.div className="flex mt-6 w-full space-x-4">
+          <motion.div
+            onClick={() => handleNavigation(`/lesson/${courseId}/`)}
+            className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
+            style={{ color: "#3f51b5" }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <div
-            className = "p-[1rem] border-b-[2px] border-[#eee] flex items-center"
-              
-            >
-              <Avatar
-                sx={{
-                  backgroundColor: "#3f51b5",
-                  marginRight: "0.5rem",
-                  textTransform: "uppercase",
-                }}
-              >
-                {post.author ? post.author[0] : "DC"}
-              </Avatar>
-              <Box>
-                <h1
-                  className = "font-bold text-xl m-2"
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                    color: "#3f51b5",
-                  }}
-                >
-                  {"Davis Chow"}
-                </h1>
-                <h2
-                  style={{
-                    fontFamily: "Poppins, sans-serif",
-                    color: "#3f51b5",
-                }}
-                  className = "ml-2"
-                >
-                  {new Date(post.created_at).toLocaleString()}
-                </h2>
-              </Box>
-            </div>
+            <SchoolIcon style={{ fontSize: "2rem" }} />
+            <Typography variant="h6" sx={{ ml: 2, fontFamily: "Poppins, sans-serif" }}>
+              Lessons
+            </Typography>
+          </motion.div>
+          <motion.div
+            onClick={() => handleNavigation(`/homework/${courseId}/`)}
+            className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
+            style={{ color: "#3f51b5" }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <ArticleIcon style={{ fontSize: "2rem" }} />
+            <Typography variant="h6" sx={{ ml: 2, fontFamily: "Poppins, sans-serif" }}>
+              Homework
+            </Typography>
+          </motion.div>
+        </motion.div>
 
-            <CardContent>
-              <h2 
-              className = "font-bold text-xl m-2"
-              style={{
-                fontFamily: "Poppins, sans-serif",                
-              }} >
-                {post.title}
-              </h2>
-              <h2 
-              className = "ml-2"
-              style={{
-                fontFamily: "Poppins, sans-serif",
-              }}>
-                {post.content}
-              </h2>
-            </CardContent>
-          </div>
-        ))
-      ) : (
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          sx={{ textAlign: "center", marginTop: "1rem" }}
-        >
-          No posts available
-        </Typography>
-      )}
-    </div>
-  </div>
-      
-      <Navbar />
-      </Box>
-    </div>
+        <motion.div className="w-full mt-6 overflow-hidden">
+          <Typography variant="h5" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", mb: 2 }}>
+            Posts
+          </Typography>
+          <motion.div drag="x" dragConstraints={{ left: -300, right: 300 }} className="flex flex-col space-y-5">
+            {posts.length > 0 ? (
+              posts.map((post) => (
+                <motion.div
+                  key={post.id}
+                  className="border-2 rounded-2xl overflow-hidden flex flex-col p-4"
+                >
+                  <div className="flex items-center">
+                    <Avatar sx={{ backgroundColor: "#3f51b5", marginRight: "0.5rem" }}>
+                      {post.author ? post.author[0] : "U"}
+                    </Avatar>
+                    <Typography variant="subtitle1" sx={{ fontFamily: "Poppins, sans-serif", fontWeight: "bold" }}>
+                      {post.author || "Davis Chow"}
+                    </Typography>
+                  </div>
+                  <Typography variant="h6" sx={{ mt: 2, fontFamily: "Poppins, sans-serif" }}>
+                    {post.title}
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif", mt: 1 }}>
+                    {post.content}
+                  </Typography>
+                </motion.div>
+              ))
+            ) : (
+              <Typography variant="body2" color="textSecondary" sx={{ textAlign: "center", marginTop: "1rem" }}>
+                No posts available
+              </Typography>
+            )}
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 };
 

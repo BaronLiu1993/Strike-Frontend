@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 
 const AddGrade = () => {
-  const { courseId, homeworkId } = useParams(); // Extract courseId and homeworkId from the URL
+  const { courseId, homeworkId } = useParams(); 
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

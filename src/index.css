@@ -7,3 +7,19 @@
   font-family: "Oswald";
   src: url("React_Test/Test_Strike/test_strike/src/fonts/roboto/Roboto-Black.ttf");
 }
+
+.page-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  will-change: transform;
+}
+
+.swipe-transition {
+  transition: transform 0.3s ease-out;
+}
+
+.swipe-reset {
+  transition: transform 0.2s ease-in;
+}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import { Box, Button, CircularProgress, TextField, Typography, Alert } from '@mui/material';
 
 const Register = () => {
@@ -10,7 +10,7 @@ const Register = () => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate(); 
 
   const handleRegister = async () => {
     if (!username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
@@ -27,7 +27,6 @@ const Register = () => {
       setMessage('Username must contain only English letters and numbers, and be 2-20 characters long.');
       return;
     }
-
     setLoading(true);
     try {
       const payload = {
@@ -84,9 +83,17 @@ const Register = () => {
         padding: "2rem",
         height: "auto",
         boxSizing: "border-box",
+        
       }}
     >
-      <Typography variant="h5" textAlign="center" mb={2} fontWeight="bold">
+      <Typography style={{
+                  fontFamily: "Poppins, sans-serif",
+                  color: "#3f51b5",
+              }} 
+              variant="h5" 
+              textAlign="center" 
+              mb={2}
+              fontWeight="bold">
         Fill in Your Information!
       </Typography>
 
@@ -95,6 +102,10 @@ const Register = () => {
       )}
 
       <TextField
+      style={{
+        fontFamily: "Poppins, sans-serif",
+        color: "#3f51b5",
+    }}
         label="Username"
         fullWidth
         variant="outlined"
@@ -102,7 +113,11 @@ const Register = () => {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         helperText="Your username will be visible to others."
-        inputProps={{ maxLength: 20 }}
+        sx={{
+          fontFamily: "Poppins, sans-serif",
+          "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, // Ensures input field text uses Poppins
+          "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" }, // Ensures label uses Poppins
+        }}
       />
       <TextField
         label="Email"
@@ -112,6 +127,11 @@ const Register = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         type="email"
+        sx={{
+          fontFamily: "Poppins, sans-serif",
+          "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, // Ensures input field text uses Poppins
+          "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" }, // Ensures label uses Poppins
+        }}
       />
       <TextField
         label="Password"
@@ -121,6 +141,11 @@ const Register = () => {
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        sx={{
+          fontFamily: "Poppins, sans-serif",
+          "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, // Ensures input field text uses Poppins
+          "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" }, // Ensures label uses Poppins
+        }}
       />
       <TextField
         label="Confirm Password"
@@ -130,9 +155,19 @@ const Register = () => {
         type="password"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
+        sx={{
+          fontFamily: "Poppins, sans-serif",
+          "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, // Ensures input field text uses Poppins
+          "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" }, // Ensures label uses Poppins
+        }}
       />
 
-      <Typography variant="body2" color="textSecondary" mb={2}>
+      <Typography style={{
+                  fontFamily: "Poppins, sans-serif",
+                  color: "#3f51b5",
+              }} variant="body2"
+              color="textSecondary"
+              mb={2}>
         <strong>Username Requirements:</strong>
         <ul style={{ marginLeft: '1rem', listStyle: 'disc' }}>
           <li>Contains only English letters and numbers.</li>
@@ -144,6 +179,10 @@ const Register = () => {
         variant="contained"
         fullWidth
         onClick={handleRegister}
+        style={{
+          fontFamily: "Poppins, sans-serif",
+          background: "#3f51b5",
+      }}
         sx={{
           padding: '0.8rem',
           fontSize: '1rem',

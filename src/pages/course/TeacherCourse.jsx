@@ -16,7 +16,6 @@ import CreatePost from "../create/CreatePost";
 import CreateLesson from "../create/CreateLesson";
 import CreateHomework from "../create/CreateHomework";
 import AddStudents from "../create/AddStudents";
-import Class from "../../assets/class.jpg";
 
 const TeacherCourse = () => {
   const { courseId } = useParams();
@@ -52,10 +51,8 @@ const TeacherCourse = () => {
       if (!courseResponse.ok) {
         throw new Error("Failed to fetch course details");
       }
-
       const courseData = await courseResponse.json();
       setCourseDetails(courseData);
-
       const postsResponse = await fetch(
         `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/posts/${courseId}/posts/`,
         {
@@ -66,14 +63,11 @@ const TeacherCourse = () => {
           credentials: "include",
         }
       );
-
       if (!postsResponse.ok) {
         throw new Error("Failed to fetch posts");
       }
-
       const postsData = await postsResponse.json();
       setPosts(postsData);
-
       const lessonsResponse = await fetch(
         `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/lesson/${courseId}/lessons/`,
         {

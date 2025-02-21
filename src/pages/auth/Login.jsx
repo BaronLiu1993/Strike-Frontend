@@ -1,29 +1,28 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import AudiotrackIcon from '@mui/icons-material/Audiotrack';
 import { Button, TextField, Typography, Box, Alert } from "@mui/material";
-import "@fontsource/poppins"; 
+import "@fontsource/poppins";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const navigate = useNavigate();
 
   const submit = async (e) => {
     e.preventDefault();
     setError(null);
+    setIsLoggingIn(true);
 
-    const user = {
-      username: username,
-      password: password,
-    };
+    const user = { username, password };
 
     try {
       const response = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/login/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
         credentials: "include",
       });
@@ -51,70 +50,58 @@ const Login = () => {
       }
 
       const roleData = await roleResponse.json();
-
-      if (roleData.role === "teacher") {
-        navigate("/teacher-home");
-      } else if (roleData.role === "student") {
-        navigate("/student-home");
-      } else {
-        throw new Error("Unknown user role. Contact support.");
-      }
+      setTimeout(() => {
+        if (roleData.role === "teacher") {
+          navigate("/teacher-home");
+        } else if (roleData.role === "student") {
+          navigate("/student-home");
+        } else {
+          throw new Error("Unknown user role. Contact support.");
+        }
+      }, 500);
     } catch (err) {
+      setIsLoggingIn(false);
       setError(err.message);
     }
   };
 
   return (
-    <div
-      style={{
-        fontFamily: "Poppins, sans-serif",
-        minHeight: "100vh",
-        position: "relative",
-      }}
-    >
-      <div
-        className="flex flex-col items-center justify-center"
+    <AnimatePresence>
+      <motion.div
+        initial={{ x: 0, opacity: 1 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: "-100vw", opacity: 0 }}
+        transition={{ type: "tween", duration: 0.5 }}
         style={{
-          position: "relative",
-          zIndex: 1,
-          width: "100%",
-          height: "100vh",
+          fontFamily: "Poppins, sans-serif",
+          minHeight: "100vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <div
-          className="flex flex-col rounded-md w-[90%] max-w-[400px] p-6"
+        <motion.div
+          className="flex flex-col rounded-md"
+          style={{
+            width: "90%",
+            maxWidth: "400px",
+            background: "white",
+            padding: "1.5rem",
+            borderRadius: "10px"
+          }}
         >
-          <Typography
-            variant="h4"
-            component="h1"
-            style={{
-              marginBottom: "1rem",
-              fontWeight: "bold",
-              color: "#000",
-            }}
-          >
+          <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", textAlign: "center" }}>
             Welcome Back!
           </Typography>
-          <Typography
-            variant="subtitle1"
-            style={{
-              color: "#000",
-              marginBottom: "1rem",
-            }}
-          >
-            Enter your login details 
+          <Typography variant="subtitle1" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", textAlign: "center", marginBottom: "1rem" }}>
+            Enter your login details
           </Typography>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-          <form onSubmit={submit} style={{ width: "100%", marginBottom: "1rem" }}>
+          <AudiotrackIcon sx={{ color: "#3f51b5", fontSize: "5rem", display: "block", margin: "0 auto 1rem" }} />
+
+          <form onSubmit={submit} style={{ width: "100%" }}>
             <Box mb={2}>
               <TextField
                 fullWidth
@@ -123,8 +110,11 @@ const Login = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                InputLabelProps={{ style: { color: "#000" } }}
-                InputProps={{ style: { color: "#000"} }}
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+                  "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+                }}
               />
             </Box>
             <Box mb={2}>
@@ -136,36 +126,45 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                InputLabelProps={{ style: { color: "#000" } }}
-                InputProps={{ style: { color: "#000"} }}
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, // Ensures input field text uses Poppins
+                  "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" }, // Ensures label uses Poppins
+                }}
               />
             </Box>
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              sx={{
-                padding: 1.5,
-                fontSize: "1rem",
-                fontWeight: "bold",
-                textTransform: "none",
-                backgroundColor: "#000",
-                color: "#fff",
-                "&:hover": { backgroundColor: "#333" },
-              }}
+            <motion.div
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
             >
-              Login
-            </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                disabled={isLoggingIn}
+                sx={{
+                  padding: "12px",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  textTransform: "none",
+                  backgroundColor: "#3f51b5",
+                  color: "#fff",
+                  "&:hover": { backgroundColor: "#3f51b5" },
+                }}
+              >
+                {isLoggingIn ? "Logging in..." : "Login"}
+              </Button>
+            </motion.div>
           </form>
 
-          <Box display="flex" justifyContent="center" alignItems="center">
-            <Typography variant="body2" sx={{ mr: 1, color: "#000" }}>
+          <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+            <Typography variant="body2" sx={{ color: "#3f51b5", mr: 1 }}>
               Don't have an account?
             </Typography>
             <Button
               variant="text"
               sx={{
-                color: "#000",
+                color: "#3f51b5",
                 fontWeight: "bold",
                 textTransform: "none",
                 "&:hover": { textDecoration: "underline" },
@@ -175,9 +174,9 @@ const Login = () => {
               Register
             </Button>
           </Box>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
