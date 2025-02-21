@@ -33,7 +33,7 @@ const Register2 = () => {
         email: email.trim(),
       };
 
-      const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/register/student/', {
+      const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/register/teacher/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -118,7 +118,7 @@ const StudentHome = () => {
               Courses
             </Typography>
             {courses.length === 0 ? (
-              <Typography variant="body1" color="textSecondary">
+              <Typography sx = {{ml: 2}} variant="body1" color="textSecondary">
                 No courses found
               </Typography>
             ) : (
