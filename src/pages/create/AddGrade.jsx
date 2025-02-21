@@ -67,7 +67,7 @@ const AddGrade = () => {
       }
 
       setSuccessMessage("Grade submitted successfully.");
-      setTimeout(() => setSuccessMessage(""), 3000); // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(""), 3000); 
     } catch (err) {
       setError(err.message);
     }

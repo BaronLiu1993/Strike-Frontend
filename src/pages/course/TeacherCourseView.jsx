@@ -5,139 +5,80 @@ import {
   CircularProgress,
   Alert,
   Box,
-  Button,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Card,
   CardContent,
-  CardHeader,
   Avatar,
-  Divider,
+  Button, 
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Navbar from "../navbar/Navbar";
-import Class from "../../assets/class.jpg";
+import CreatePost from "../create/CreatePost";
+import CreateHomework from "../create/CreateHomework";
+import CreateLesson from "../create/CreateLesson";
+import AddStudents from "../create/AddStudents";
+
+
+import { motion } from "framer-motion";
+import ArticleIcon from "@mui/icons-material/Article";
+import SchoolIcon from "@mui/icons-material/School";
 
 const TeacherCourseView = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [courseDetails, setCourseDetails] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [lessons, setLessons] = useState([]);
-  const [homeworks, setHomeworks] = useState([]);
+  const [openDialog, setOpenDialog] = useState({
+    post: false,
+    lesson: false,
+    homework: false,
+    student: false
+  });
+
+
+  const componentMapping = {
+    post: <CreatePost />,
+    lesson: <CreateLesson />,
+    homework: <CreateHomework />, 
+    students: <AddStudents courseIdentification={courseId}/>
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        const accessToken = localStorage.getItem("access_token");
 
-        const courseResponse = await fetch(
+        const urls = [
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/${courseId}/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            credentials: "include",
-          }
+          `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/posts/${courseId}/posts/`
+        ];
+
+        const responses = await Promise.all(
+          urls.map((url) =>
+            fetch(url, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
+              credentials: "include",
+            })
+          )
         );
 
-        if (!courseResponse.ok) {
-          throw new Error("Failed to fetch course details");
+        if (responses.some((res) => !res.ok)) {
+          throw new Error("Failed to fetch course data");
         }
 
-        const courseData = await courseResponse.json();
+        const [courseData, postsData] = await Promise.all(
+          responses.map((res) => res.json())
+        );
+
         setCourseDetails(courseData);
-
-        const postsResponse = await fetch(
-          `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/posts/${courseId}/posts/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            credentials: "include",
-          }
-        );
-
-        if (!postsResponse.ok) {
-          throw new Error("Failed to fetch posts");
-        }
-
-        const postsData = await postsResponse.json();
         setPosts(postsData || []);
-
-        const lessonsResponse = await fetch(
-          `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/lesson/${courseId}/lessons/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            credentials: "include",
-          }
-        );
-
-        if (!lessonsResponse.ok) {
-          throw new Error("Failed to fetch lessons");
-        }
-
-        const lessonsData = await lessonsResponse.json();
-        setLessons(lessonsData || []);
-
-        const homeworkResponse = await fetch(
-          `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/homework/${courseId}/homeworks/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            credentials: "include",
-          }
-        );
-
-        if (!homeworkResponse.ok) {
-          throw new Error("Failed to fetch homework");
-        }
-
-        const homeworkData = await homeworkResponse.json();
-
-        const updatedHomeworks = await Promise.all(
-          (homeworkData || []).map(async (homework) => {
-            if (homework.graded && homework.submission_id) {
-              try {
-                const gradeResponse = await fetch(
-                  `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/submission/${courseId}/${homework.id}/students/${homework.student_id}/submission/${homework.submission_id}/grade/`,
-                  {
-                    method: "GET",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-                    },
-                    credentials: "include",
-                  }
-                );
-
-                if (gradeResponse.ok) {
-                  const gradeData = await gradeResponse.json();
-                  return { ...homework, grade: gradeData.grade };
-                }
-              } catch (error) {
-                console.error("Failed to fetch grade", error);
-              }
-            }
-            return homework;
-          })
-        );
-
-        setHomeworks(updatedHomeworks || []);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -146,264 +87,175 @@ const TeacherCourseView = () => {
     };
 
     fetchData();
-  }, [courseId]);
+    if (error) {
+      navigate("/"); 
+    }
+  }, [courseId, error, navigate]);
 
-  const handleHomeworkSubmission = (homeworkId) => {
-    navigate(`/submissionview/${courseId}/${homeworkId}`);
+  const openCreateDialog = (type) => {
+    setOpenDialog((prev) => ({ ...prev, [type]: true }));
   };
+
+  const closeCreateDialog = (type) => {
+    setOpenDialog((prev) => ({ ...prev, [type]: false }));
+  };
+
+  const handleSwipe = (event, info) => {
+    if (info.offset.x > 100) navigate(-1);
+    if (info.offset.x < -100) navigate(1);
+  };
+
+  const handleNavigation = (path) => navigate(path);
 
   if (loading) {
     return (
       <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-          backgroundColor: "#f5f5f5",
-        }}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", backgroundColor: "#f5f5f5" }}
       >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-          backgroundColor: "#f5f5f5",
-        }}
-      >
-        <Alert severity="error">{error}</Alert>
+        <CircularProgress size={50} sx={{ color: "#3f51b5" }} />
       </Box>
     );
   }
 
   return (
-    <div
-      className="flex flex-col"
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
-        display: "flex",
-        flexDirection: "column",
-      }}
+    <motion.div
+      className="flex flex-col items-center"
+      style={{ minHeight: "100vh", paddingBottom: "64px", overflow: "hidden" }}
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      onDragEnd={handleSwipe}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          backgroundColor: "white",
-          boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
-          borderRadius: "10px",
-          padding: "2rem",
-          flexGrow: 1,
-        }}
+      <motion.div
+        className="p-6 flex-grow flex flex-col bg-white rounded-md items-center w-full mt-[3rem]"
+        style={{ flex: 1, overflowY: "auto", paddingBottom: "64px" }}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
       >
+        
         {courseDetails && (
-          <Box
-            sx={{
-              marginBottom: 3,
-              width: "100%",
-              padding: 6,
-              borderRadius: 2,
-            }}
-            className = "bg-slate-300"
+          <motion.div
+            className="border flex flex-col justify-center rounded-2xl p-4 w-full"
           >
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: "bold",
-                marginBottom: "0.5rem",
-                textShadow: "0 2px 4px rgba(0, 0, 0, 0.7)",
-              }}
-            >
+            <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", textAlign: "center" }}>
               {courseDetails.title}
             </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: "rgba(255, 255, 255, 0.9)",
-                textShadow: "0 1px 3px rgba(0, 0, 0, 0.7)",
-              }}
-            >
+            <Typography variant="body1" sx={{ fontFamily: "Poppins, sans-serif", textAlign: "center" }}>
               {courseDetails.description}
             </Typography>
-          </Box>
+          </motion.div>
         )}
+        <motion.div>
+          <div className = "m-[2rem] flex flex-row space-x-5">
+          <Button sx={{
+                    fontFamily: "Poppins, sans-serif",
+                    "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+                    "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+                    }} 
+                    variant="contained" 
+                    onClick={() => openCreateDialog("post")}>
+            Create Post</Button>
+          <Button 
+          sx={{
+            fontFamily: "Poppins, sans-serif",
+            "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+            "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+            }} 
+            variant="contained"           
+            onClick={() => openCreateDialog("lesson")}>
+            Create Lesson</Button>
+          <Button sx={{
+                fontFamily: "Poppins, sans-serif",
+                "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+                "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+                }} 
+              variant="contained" 
+                    onClick={() => openCreateDialog("homework")}>
+                  Create Homework</Button>
+                  <Button sx={{
+                    fontFamily: "Poppins, sans-serif",
+                    "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+                    "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+                    }} 
+                    variant="contained" 
+                    onClick={() => openCreateDialog("students")}>
+            Add Student</Button>
+          {Object.keys(componentMapping).map((type) => (
+            <Dialog key={type} open={openDialog[type]} onClose={() => closeCreateDialog(type)}>
+              <DialogContent>
+                {componentMapping[type]} 
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => closeCreateDialog(type)}>Close</Button>
+              </DialogActions>
+            </Dialog>
+          ))}
+        </div>
+        </motion.div>
 
-        <Accordion sx={{ width: "100%", marginBottom: "1.5rem" }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h5" fontWeight="bold">
+        <motion.div className="flex mt-6 w-full space-x-4">
+          <motion.div
+            onClick={() => handleNavigation(`/lesson/${courseId}/`)}
+            className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
+            style={{ color: "#3f51b5" }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <SchoolIcon style={{ fontSize: "2rem" }} />
+            <Typography variant="h6" sx={{ ml: 2, fontFamily: "Poppins, sans-serif" }}>
               Lessons
             </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {lessons && lessons.length > 0 ? (
-              lessons.map((lesson) => (
-                <Box
-                  key={lesson.id}
-                  sx={{
-                    padding: 2,
-                    border: "1px solid #ddd",
-                    borderRadius: 1,
-                    marginBottom: 2,
-                  }}
+          </motion.div>
+          <motion.div
+            onClick={() => handleNavigation(`/homework-teacher/${courseId}/`)}
+            className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
+            style={{ color: "#3f51b5" }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <ArticleIcon style={{ fontSize: "2rem" }} />
+            <Typography variant="h6" sx={{ ml: 2, fontFamily: "Poppins, sans-serif" }}>
+              Homework
+            </Typography>
+          </motion.div>
+        </motion.div>
+
+        <motion.div className="w-full mt-6 overflow-hidden">
+          <Typography variant="h5" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", mb: 2 }}>
+            Posts
+          </Typography>
+          <motion.div drag="x" dragConstraints={{ left: -300, right: 300 }} className="flex flex-col space-y-5">
+            {posts.length > 0 ? (
+              posts.map((post) => (
+                <motion.div
+                  key={post.id}
+                  className="border-2 rounded-2xl overflow-hidden flex flex-col p-4"
                 >
-                  <Typography variant="h6" fontWeight="bold">
-                    {lesson.title}
+                  <div className="flex items-center">
+                    <Avatar sx={{ backgroundColor: "#3f51b5", marginRight: "0.5rem" }}>
+                      {post.author ? post.author[0] : "U"}
+                    </Avatar>
+                    <Typography variant="subtitle1" sx={{ fontFamily: "Poppins, sans-serif", fontWeight: "bold" }}>
+                      {post.author || "Davis Chow"}
+                    </Typography>
+                  </div>
+                  <Typography variant="h6" sx={{ mt: 2, fontFamily: "Poppins, sans-serif" }}>
+                    {post.title}
                   </Typography>
-                  <Typography variant="body2">{lesson.content}</Typography>
-                </Box>
+                  <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif", mt: 1 }}>
+                    {post.content}
+                  </Typography>
+                </motion.div>
               ))
             ) : (
-              <Typography variant="body2" color="textSecondary">
-                No lessons available
+              <Typography variant="body2" color="textSecondary" sx={{ textAlign: "center", marginTop: "1rem" }}>
+                No posts available
               </Typography>
             )}
-          </AccordionDetails>
-        </Accordion>  
-  <Accordion sx={{ width: "100%", marginBottom: "1.5rem" }}>
-    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography variant="h5" fontWeight="bold">
-        Homework
-      </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          {homeworks && homeworks.length > 0 ? (
-            homeworks.map((homework) => (
-              <Box
-                key={homework.id}
-                sx={{
-                  padding: 2,
-                  border: "1px solid #ddd",
-                  borderRadius: 1,
-                  marginBottom: 2,
-                }}
-              >
-                <Typography variant="h6" fontWeight="bold">
-                  {homework.title}
-                </Typography>
-                <Typography variant="body2" sx={{ marginBottom: "0.5rem" }}>
-                  {homework.description}
-                </Typography>
-
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#000",
-                    color: "#fff",
-                    "&:hover": { backgroundColor: "#333" },
-                  }}
-                  onClick={() => handleHomeworkSubmission(homework.id)} // Redirect to grade submissions
-                >
-                  Grade Homework
-                </Button>
-              </Box>
-            ))
-          ) : (
-            <Typography variant="body2" color="textSecondary">
-              No homework available
-            </Typography>
-          )}
-        </AccordionDetails>
-      </Accordion>
-    <Box
-      sx={{
-        width: "100%",
-        marginTop: "2rem",
-        padding: "1rem",
-        backgroundColor: "white",
-        borderRadius: "10px",
-        boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
-        maxHeight: "500px", 
-        overflowY: "auto", 
-      }}
-    >
-      <Typography
-        variant="h5"
-        fontWeight="bold"
-        sx={{ marginBottom: "1rem", textAlign: "center" }}
-      >
-        Posts Feed
-      </Typography>
-
-      {posts && posts.length > 0 ? (
-        posts.map((post) => (
-          <Card
-            key={post.id}
-            sx={{
-              marginBottom: 2,
-              border: "1px solid #ddd",
-              borderRadius: "10px",
-              overflow: "hidden",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                padding: "0.5rem 1rem",
-                borderBottom: "1px solid #eee",
-              }}
-            >
-              <Avatar
-                sx={{
-                  backgroundColor: "#3f51b5",
-                  marginRight: "0.5rem",
-                  textTransform: "uppercase",
-                }}
-              >
-                {post.author ? post.author[0] : "?"}
-              </Avatar>
-              <Box>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ fontWeight: "bold", lineHeight: 1.2 }}
-                >
-                  {post.author || "Davis Chow"}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{ color: "gray", lineHeight: 1.2 }}
-                >
-                  {new Date(post.created_at).toLocaleString()}
-                </Typography>
-              </Box>
-            </Box>
-
-            <CardContent>
-              <Typography variant="body1" sx={{ marginBottom: "0.5rem" }}>
-                {post.title}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {post.content}
-              </Typography>
-            </CardContent>
-          </Card>
-        ))
-      ) : (
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          sx={{ textAlign: "center", marginTop: "1rem" }}
-        >
-          No posts available
-        </Typography>
-      )}
-    </Box>
-
-     </Box>
-      <Navbar />
-    </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 };
 

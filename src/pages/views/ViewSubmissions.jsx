@@ -8,9 +8,11 @@ import {
   Alert,
   TextField,
 } from "@mui/material";
-import Navbar from '../navbar/Navbar'
+import { motion } from "framer-motion";
+import { AssignmentTurnedIn } from "@mui/icons-material";
+import Navbar from "../navbar/Navbar";
 
-const ViewSubmissions = ({ onClose }) => {
+const ViewSubmissions = () => {
   const { courseId, homeworkId } = useParams();
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -28,9 +30,10 @@ const ViewSubmissions = ({ onClose }) => {
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/submission/${courseId}/${homeworkId}/submissions/`,
           {
             method: "GET",
-            headers: { "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
-             },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
             credentials: "include",
           }
         );
@@ -59,12 +62,10 @@ const ViewSubmissions = ({ onClose }) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
           credentials: "include",
-          body: JSON.stringify({
-            grade,
-          }),
+          body: JSON.stringify({ grade }),
         }
       );
 
@@ -87,169 +88,137 @@ const ViewSubmissions = ({ onClose }) => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-          backgroundColor: "#f5f5f5",
-        }}
-      >
-        <CircularProgress />
+      <Box className="flex justify-center items-center min-h-screen bg-gray-100">
+        <CircularProgress size={50} sx={{ color: "#3f51b5" }} />
       </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert severity="error" sx={{ margin: "1rem", width: "100%" }}>
-        {error}
-      </Alert>
     );
   }
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh", // Full height of the screen
-        backgroundColor: "#f5f5f5",
-      }}
+    <motion.div
+      className="m-6"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      <Box
-        sx={{
-          backgroundColor: "white",
-          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-          borderRadius: "10px",
-          padding: "2rem",
-          width: "100%", // Fixed width
-          height: "100%", // Full height
-          overflowY: "auto", // Allow scrolling for content
-        }}
-      >
-        <Typography variant="h5" gutterBottom>
-          Submissions for Homework {homeworkId}
-        </Typography>
-        {successMessage && (
-          <Alert severity="success" sx={{ marginBottom: "1rem" }}>
-            {successMessage}
-          </Alert>
-        )}
-        <Box>
-          {submissions.length > 0 ? (
-            submissions.map((submission) => {
-              const fileName = submission.submission_video
-                ? submission.submission_video.split("/").pop()
-                : "";
+      <motion.div className="border flex items-center rounded-2xl p-4 mt-[3rem] w-full bg-white shadow-lg">
+        <AssignmentTurnedIn sx={{ fontSize: "4rem", color: "#3f51b5" }} />
+        <div className="ml-4">
+          <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5" }}>
+            Submissions
+          </Typography>
+          <Typography variant="body1" sx={{ fontFamily: "Poppins, sans-serif" }}>
+            Review and grade student submissions
+          </Typography>
+        </div>
+      </motion.div>
 
-              const videoUrl = `${VIDEO_BASE_URL}${fileName}`;
+      {successMessage && (
+        <Alert severity="success" sx={{ marginY: 2, textAlign: "center" }}>
+          {successMessage}
+        </Alert>
+      )}
+      {error && (
+        <Alert severity="error" sx={{ marginY: 2, textAlign: "center" }}>
+          {error}
+        </Alert>
+      )}
 
-              return (
-                <Box
-                  key={submission.id}
-                  sx={{
-                    padding: 2,
-                    border: "1px solid #ddd",
-                    borderRadius: 1,
-                    marginBottom: 2,
-                    backgroundColor: "#f9f9f9",
-                  }}
-                >
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                    Student: {submission.student}
-                  </Typography>
-                  {fileName ? (
-                    <video
-                      style={{
-                        width: "100%",
-                        marginBottom: "1rem",
-                        borderRadius: "8px",
-                        border: "1px solid #ccc",
-                      }}
-                      controls
-                    >
-                      <source src={videoUrl} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  ) : (
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      gutterBottom
-                    >
-                      No video submission available.
-                    </Typography>
-                  )}
-                  <Typography variant="body2" gutterBottom>
-                    Submitted on:{" "}
-                    {new Date(submission.submitted_at).toLocaleString()}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ marginBottom: 1 }}
-                    color="textSecondary"
+      <motion.div className="flex flex-col mt-8 space-y-5">
+        {submissions.length === 0 ? (
+          <Typography variant="body1" sx={{ textAlign: "center", color: "#666" }}>
+            No submissions available
+          </Typography>
+        ) : (
+          submissions.map((submission) => {
+            const fileName = submission.submission_video
+              ? submission.submission_video.split("/").pop()
+              : "";
+            const videoUrl = `${VIDEO_BASE_URL}${fileName}`;
+
+            return (
+              <motion.div
+                key={submission.id}
+                className="border flex flex-col p-4 rounded-2xl bg-white shadow-md"
+              >
+                <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5" }}>
+                  Student ID: {submission.id}
+                </Typography>
+                {fileName ? (
+                  <video
+                    style={{
+                      width: "100%",
+                      marginBottom: "1rem",
+                      borderRadius: "8px",
+                      border: "1px solid #ccc",
+                    }}
+                    controls
                   >
-                    Annotation: {submission.submission_text || "No annotations"}
+                    <source src={videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <Typography variant="body2" sx={{ color: "#888", marginBottom: 2 }}>
+                    No video submission available.
                   </Typography>
+                )}
 
-                  {submission.graded ? (
-                    <Typography
-                      variant="body1"
-                      color="success.main"
-                      sx={{ marginBottom: 2 }}
-                    >
-                      Grade: {submission.grade}
-                    </Typography>
-                  ) : (
-                    <>
-                      <TextField
-                        label="Grade"
-                        variant="outlined"
-                        type="number"
-                        fullWidth
-                        sx={{ marginBottom: 1 }}
-                        onChange={(e) =>
-                          setSubmissions((prev) =>
-                            prev.map((s) =>
-                              s.id === submission.id
-                                ? {
-                                    ...s,
-                                    grade: parseInt(e.target.value, 10),
-                                  }
-                                : s
-                            )
+                <Typography variant="body2" sx={{ color: "#888", marginBottom: 1 }}>
+                  Submitted on: {new Date(submission.submitted_at).toLocaleString()}
+                </Typography>
+
+                <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif", marginBottom: 1 }}>
+                  Annotation: {submission.submission_text || "No annotations"}
+                </Typography>
+
+                {submission.graded ? (
+                  <Typography
+                    variant="body1"
+                    color="success.main"
+                    sx={{ fontFamily: "Poppins, sans-serif", marginBottom: 2 }}
+                  >
+                    Grade: {submission.grade}
+                  </Typography>
+                ) : (
+                  <Box>
+                    <TextField
+                      label="Grade"
+                      variant="outlined"
+                      type="number"
+                      fullWidth
+                      sx={{ marginBottom: 1 }}
+                      onChange={(e) =>
+                        setSubmissions((prev) =>
+                          prev.map((s) =>
+                            s.id === submission.id
+                              ? { ...s, grade: parseInt(e.target.value, 10) }
+                              : s
                           )
-                        }
-                      />
+                        )
+                      }
+                    />
+                    <motion.div>
                       <Button
                         variant="contained"
                         fullWidth
-                        onClick={() =>
-                          handleGradeSubmit(submission.id, submission.grade)
-                        }
+                        onClick={() => handleGradeSubmit(submission.id, submission.grade)}
                         sx={{
-                          backgroundColor: "#000",
+                          backgroundColor: "#3f51b5",
                           color: "#fff",
-                          "&:hover": { backgroundColor: "#333" },
+                          "&:hover": { backgroundColor: "#303f9f" },
                         }}
                       >
                         Submit Grade
                       </Button>
-                    </>
-                  )}
-                </Box>
-              );
-            })
-          ) : (
-            <Typography>No submissions available.</Typography>
-          )}
-        </Box>
-      </Box>
-      <Navbar />
-    </Box>
+                    </motion.div>
+                  </Box>
+                )}
+              </motion.div>
+            );
+          })
+        )}
+      </motion.div>
+    </motion.div>
   );
 };
 

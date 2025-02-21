@@ -4,19 +4,17 @@ import { Typography, CircularProgress, Alert, Box } from "@mui/material";
 import { motion } from "framer-motion";
 import WorkIcon from "@mui/icons-material/Work";
 
-const Homework = () => {
+const TeacherHomework = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
   const [homeworks, setHomeworks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [submissions, setSubmissions] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+    const fetchHomework = async () => {
       try {
-        const homeworkRes = await fetch(
+        const response = await fetch(
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/homework/${courseId}/homeworks/`,
           {
             method: "GET",
@@ -27,50 +25,29 @@ const Homework = () => {
             credentials: "include",
           }
         );
-  
-        if (!homeworkRes.ok) {
-          throw new Error("Failed to fetch homework");
-        }
-  
-        const homeworkData = await homeworkRes.json();
-        setHomeworks(homeworkData || []);
-  
-        const homeworkId = homeworkData.length > 0 ? homeworkData[0].id : null;
-        if (!homeworkId) {
-          throw new Error("No homework available");
-        }
-  
-        const submissionRes = await fetch(
-          `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/submission/${courseId}/${homeworkId}/submission/1/grade/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            credentials: "include",
-          }
-        );
-  
-        if (!submissionRes.ok) {
-          throw new Error("Failed to fetch submissions");
-        }
-  
-        const submissionData = await submissionRes.json();
-        setSubmissions(submissionData || []);
+
+        if (!response.ok) throw new Error("Failed to fetch homework");
+
+        const data = await response.json();
+        setHomeworks(data || []);
       } catch (error) {
         setError(error.message);
       } finally {
         setLoading(false);
       }
     };
-  
-    fetchData();
-  }, [courseId, navigate]);
+
+    fetchHomework();
+    if (error) {
+        navigate("/"); 
+    }
+  }, [courseId, error, navigate]);
 
   const handleHomeworkSubmission = (homeworkId) => {
-    navigate(`/submission/${courseId}/${homeworkId}`);
+    navigate(`/submissionview/${courseId}/${homeworkId}`);
   };
+
+
 
   if (loading) {
     return (
@@ -79,6 +56,8 @@ const Homework = () => {
       </Box>
     );
   }
+
+  
 
   return (
     <motion.div
@@ -89,7 +68,6 @@ const Homework = () => {
     >
       <motion.div
         className="border flex items-center rounded-2xl p-4 mt-[3rem] w-full "
-        
       >
         <WorkIcon sx={{ fontSize: "4rem", color: "#3f51b5" }} />
         <div className="ml-4">
@@ -125,26 +103,11 @@ const Homework = () => {
                 </Typography>
               </div>
             
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                {submissions.grade === null || submissions.grade === undefined ? (
-                    <Typography variant="body1" color="warning.main" sx={{ fontFamily: "Poppins, sans-serif" }}>
-                    Pending Grade
-                    </Typography>
-                ) : submissions.grade > 0 ? (
-                    <Typography variant="body1" color="success.main" sx={{ fontFamily: "Poppins, sans-serif" }}>
-                    Grade: {submissions.grade}
-                    </Typography>
-                ) : (
-                    <button
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                    className="bg-[#3f51b5] text-white px-4 py-2 rounded"
-                    onClick={() => handleHomeworkSubmission(homework.id)}
-                    >
-                    Submit
-                    </button>
-                )}
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <button style = {{fontFamily: "Poppins, sans-serif"}}className="bg-[#3f51b5] text-white px-4 py-2 rounded" onClick={() => handleHomeworkSubmission(homework.id)}>
+                    Grade
+                </button>
                 </motion.div>
-
             </motion.div>
           ))
         )}
@@ -153,4 +116,4 @@ const Homework = () => {
   );
 };
 
-export default Homework;
+export default TeacherHomework;

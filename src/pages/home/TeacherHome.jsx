@@ -1,275 +1,312 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import Violin from '../../assets/violin.jpg';
-import Navbar from '../navbar/Navbar';
-import Strike from '../../assets/strike.png';
-import {
-  Typography,
-  CssBaseline,
-  Box,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  CircularProgress,
-  Alert,
-} from '@mui/material';
-import '@fontsource/poppins';
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion, useAnimation } from "framer-motion";
+import { Typography, CssBaseline, CircularProgress, Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
+import GradeIcon from "@mui/icons-material/Grade";
+import ScoreboardIcon from "@mui/icons-material/Scoreboard";
+import "@fontsource/poppins";
 
 const TeacherHome = () => {
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
-  const [newCourse, setNewCourse] = useState({ title: '', description: '' });
-  const [createMessage, setCreateMessage] = useState('');
+  const [newCourse, setNewCourse] = useState({ title: "", description: "" });
   const [creating, setCreating] = useState(false);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [createMessage, setCreateMessage] = useState("");
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const controls = useAnimation();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const getCourses = async () => {
-      console.log("Starting fetch for courses...");
-      try {
-        const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/', {
-          method: 'GET',
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    const accessToken = localStorage.getItem("access_token");
+
+    try {
+      const [coursesRes, studentRes] = await Promise.all([
+        fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/", {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Add token here
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
           },
-        });
+          credentials: "include",
+        }),
+      ]);
 
-        console.log("Response status:", response.status);
-        if (!response.ok) {
-          throw new Error('Failed to fetch courses');
-        }
-
-        const data = await response.json();
-        console.log("Fetched courses data:", data);
-        setCourses(data);
-      } catch (err) {
-        console.error("Error fetching courses:", err.message);
-        setError(err.message);
-      } finally {
-        console.log("Fetch complete, setting loading to false.");
-        setLoading(false);
-      }
-    };
-
-    getCourses();
+      if (!coursesRes.ok) throw new Error("Failed to fetch data");
+      const coursesData = await coursesRes.json();
+      setCourses(coursesData.results || coursesData || []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  
+
   const handleCourseClick = (courseId) => {
-    navigate(`/course-teacher/${courseId}`); 
+    navigate(`/course-teacher-view/${courseId}`);
+  };
+
+  const handleLeaderboardClick = () => {
+    navigate("/leaderboard");
+  };
+
+  const swipeHandler = (event, info) => {
+    if (info.offset.x > 100) {
+      navigate(-1); 
+    } else if (info.offset.x < -100) {
+      navigate(1); 
+    }
   };
 
   const handleCreateCourse = async () => {
-    if (!newCourse.title || !newCourse.description) {
-      setCreateMessage('Please fill in all fields');
-      return;
-    }
-    setCreating(true);
-    setCreateMessage('');
-    try {
-      console.log("Creating a new course with data:", newCourse);
-      const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
-        },
-        body: JSON.stringify(newCourse),
-      });
-
-      console.log("Response status for create course:", response.status);
-      if (!response.ok) {
-        throw new Error('Failed to create course');
+      if (!newCourse.title || !newCourse.description) {
+          setCreateMessage('Please fill in all fields');
+          return;
       }
+      setCreating(true);
+      setCreateMessage('');
 
-      const createdCourse = await response.json();
-      console.log("Created course data:", createdCourse);
-      setCourses((prevCourses) => [...prevCourses, createdCourse]);
-      setOpenCreateDialog(false);
-      setNewCourse({ title: '', description: '' });
-      setCreateMessage('Course created successfully!');
-    } catch (err) {
-      console.error("Error creating course:", err.message);
-      setCreateMessage('Failed to create course');
-    } finally {
-      setCreating(false);
-    }
+      try {
+          console.log("Creating a new course with data:", newCourse);
+          const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+              },
+              body: JSON.stringify(newCourse),
+          });
+
+          console.log("Response status for create course:", response.status);
+          if (!response.ok) {
+              throw new Error('Failed to create course');
+          }
+
+          const createdCourse = await response.json();
+          console.log("Created course data:", createdCourse);
+          setCourses((prevCourses) => [...prevCourses, createdCourse]);
+          setOpenCreateDialog(false);
+          setNewCourse({ title: '', description: '' });
+          setCreateMessage('Course created successfully!');
+      } catch (err) {
+          console.error("Error creating course:", err.message);
+          setCreateMessage('Failed to create course');
+      } finally {
+          setCreating(false);
+      }
   };
+
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          backgroundColor: '#f5f5f5',
-        }}
-      >
-        <CircularProgress size={50} sx={{ color: '#3f51b5' }} />
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
+        <CircularProgress size={50} sx={{ color: "#3f51b5" }} />
       </Box>
     );
   }
 
-  if (error) {
-    return <Alert severity="error">{error}</Alert>;
-  }
-
   return (
-  <>
-    <CssBaseline />
-    <div
-      className="font-poppins flex flex-col items-center bg-gray-100"
-      style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
-    >
-      <div
-        className="p-6 flex-grow flex flex-col bg-white shadow-md rounded-md items-center w-full"
-        style={{
-          flex: 1, 
-          width: "100%",
-          overflowY: "auto", 
-          paddingBottom: "64px", 
-        }}
+    <>
+      <CssBaseline />
+      <motion.div
+        className="font-poppins flex flex-col items-center"
+        style={{ minHeight: "100vh", paddingBottom: "64px", overflow: "hidden" }}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        onDragEnd={swipeHandler}
       >
-        <div className="bg-slate-300 h-[4rem] w-full flex items-center px-4 rounded-t-md">
-          <Typography
-                        variant="h6"
-                        component="h1"
-                        style={{
-                          marginLeft: "1rem",
-                          color: "brown",
-                          fontFamily: "Poppins, sans-serif",
-                          font: "bold"
-                        }}
-                      >
-                        Strike, 
-                      </Typography>
-                      <Typography
-                        variant="h6"
-                        component="h1"
-                        style={{
-                          marginLeft: "1rem",
-                          color: "black",
-                          fontFamily: "Poppins, sans-serif",
-                        }}
-                      >
-                        Beta Release
-                      </Typography>
-        </div>
-
-        <div className="w-full mt-4">
-          <Box
-            sx={{
-              marginBottom: 2,
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography variant="h5">Your Courses</Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setOpenCreateDialog(true)}
-            >
-              Create Course
-            </Button>
-          </Box>
-          {courses.length === 0 ? (
-            <Typography variant="body1" color="textSecondary">
-              No courses found
-            </Typography>
-          ) : (
-            <ul className="space-y-4">
-              {courses.map((course) => (
-                <li
-                  key={course.id}
-                  className="cursor-pointer bg-slate-300 border p-4 rounded hover:bg-gray-50"
-                  onClick={() => handleCourseClick(course.id)}
-                >
-                  <Typography
-                    variant="h6"
-                    className="font-semibold p-2 rounded"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {course.title}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    className="p-2 rounded"
-                    style={{ fontFamily: "Poppins, sans-serif" }}
-                  >
-                    {course.description}
-                  </Typography>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-
-      <Navbar />
-    </div>
-
-    {/* Dialog for Create Course */}
-    <Dialog
-      open={openCreateDialog}
-      onClose={() => setOpenCreateDialog(false)}
-      maxWidth="xs"
-    >
-      <DialogTitle>Create a New Course</DialogTitle>
-      <DialogContent>
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Course Title"
-          variant="outlined"
-          value={newCourse.title}
-          onChange={(e) =>
-            setNewCourse({ ...newCourse, title: e.target.value })
-          }
-        />
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Course Description"
-          variant="outlined"
-          multiline
-          rows={4}
-          value={newCourse.description}
-          onChange={(e) =>
-            setNewCourse({ ...newCourse, description: e.target.value })
-          }
-        />
-        {createMessage && (
-          <Typography
-            variant="body2"
-            color={createMessage.includes("successfully") ? "green" : "error"}
-          >
-            {createMessage}
-          </Typography>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setOpenCreateDialog(false)} color="secondary">
-          Cancel
-        </Button>
-        <Button
-          onClick={handleCreateCourse}
-          color="primary"
-          disabled={creating}
+        <motion.div
+          className="p-6 flex-grow flex flex-col bg-white rounded-md items-center w-full"
+          style={{ flex: 1, overflowY: "auto", paddingBottom: "64px" }}
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          {creating ? <CircularProgress size={24} /> : "Create"}
-        </Button>
-      </DialogActions>
-    </Dialog>
-  </>
+          <motion.div
+            className="h-[4rem] w-full flex items-center rounded-t-md"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", ml: 2 }}>
+              Welcome Back to Strike
+            </Typography>
+          </motion.div>
 
+          <motion.div className="w-full mt-4">
+            <Typography
+              variant="h5"
+              sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", ml: 2, my: 2 }}
+            >
+              Courses
+            </Typography>
+            {courses.length === 0 ? (
+              <Typography sx = {{ml: 2}} variant="body1" color="textSecondary">
+                No courses found
+              </Typography>
+            ) : (
+              <ul className="space-y-4">
+                {courses.map((course) => (
+                  <motion.li
+                    key={course.id}
+                    onClick={() => handleCourseClick(course.id)}
+                    className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl"
+                    style={{ color: "#3f51b5" }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <MusicNoteIcon style={{ fontSize: "3rem" }} />
+                    <div className="flex flex-col ml-4">
+                      <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif", fontWeight: "bold" }}>
+                        {course.title}
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif" }}>
+                        {course.description}
+                      </Typography>
+                    </div>
+                  </motion.li>
+                ))}
+              </ul>
+            )}
+          </motion.div>
+          <motion.div className="flex flex-col w-full mt-6">
+            <Typography variant="h5" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", ml: 2 }}>
+              Strike Leaderboard
+            </Typography>
+
+            <div className="flex space-x-4 mt-4">
+              <motion.div
+                className="cursor-pointer border flex items-center justify-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
+                style={{ color: "#3f51b5" }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setOpenCreateDialog(true)}
+              >
+                <GradeIcon style={{ fontSize: "3rem" }} />
+                <div className="flex flex-col ml-4">
+                  <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif" }}>
+                    Create
+                  </Typography>
+                  <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                    Courses
+                  </Typography>
+                </div>
+                <Dialog
+                    open={openCreateDialog}
+                    onClose={() => setOpenCreateDialog(false)}
+                    maxWidth="xs"
+                  >
+                    <DialogTitle sx={{ fontFamily: "Poppins, sans-serif", font: "bold", color: "#3f51b5", ml: 2 }}>Create a New Course</DialogTitle>
+                    <DialogContent>
+                      <TextField
+                        fullWidth
+                        margin="normal"
+                        label="Course Title"
+                        variant="outlined"
+                        value={newCourse.title}
+                        onChange={(e) =>
+                          setNewCourse({ ...newCourse, title: e.target.value })
+                        }
+                        sx={{
+                          fontFamily: "Poppins, sans-serif",
+                          "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+                          "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        margin="normal"
+                        label="Course Description"
+                        variant="outlined"
+                        multiline
+                        rows={4}
+                        value={newCourse.description}
+                        onChange={(e) =>
+                          setNewCourse({ ...newCourse, description: e.target.value })
+
+                        }
+                        sx={{
+                          fontFamily: "Poppins, sans-serif",
+                          "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+                          "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+                        }}
+                      />
+                      {createMessage && (
+                        <Typography
+                          variant="body2"
+                          color={createMessage.includes("successfully") ? "green" : "error"}
+                        >
+                          {createMessage}
+                        </Typography>
+                      )}
+                    </DialogContent>
+                    <DialogActions>
+                      <Button
+                        sx={{
+                          fontFamily: "Poppins, sans-serif",
+                          color: "#3f51b5",
+                          backgroundColor: "#f5f5f5",
+                          width: "90%",
+                          fontSize: "1rem", 
+                        }}
+                        onClick={() => {
+                          setOpenCreateDialog(false);
+                        }}
+                        color="secondary"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handleCreateCourse}
+                        color="primary"
+                        disabled={creating}
+                        sx={{
+                          fontFamily: "Poppins, sans-serif",
+                          color: "white",
+                          backgroundColor: "#3f51b5",
+                          width: "90%",
+                          fontSize: "1rem", 
+                          "&:hover": { backgroundColor: "#303f9f" }, // Darker hover effect
+                        }}
+                      >
+                        {creating ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Create"}
+                      </Button>
+                    </DialogActions>
+
+                  </Dialog>
+              </motion.div>
+              
+
+              <motion.div
+                className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
+                style={{ color: "#3f51b5" }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleLeaderboardClick()}
+              >
+                <ScoreboardIcon style={{ fontSize: "3rem" }} />
+                <div className="flex flex-col ml-4">
+                  <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif" }}>
+                    See the
+                  </Typography>
+                  <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                    Rank
+                  </Typography>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </>
   );
 };
 

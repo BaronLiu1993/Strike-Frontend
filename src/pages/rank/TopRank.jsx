@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -14,7 +15,7 @@ function TopRank() {
   const [error, setError] = useState('');
   const [students, setStudents] = useState([]);
   const [view, setView] = useState('all-time');
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
@@ -45,7 +46,10 @@ function TopRank() {
     };
 
     fetchLeaderboard();
-  }, []);
+    if (error) {
+      navigate("/"); 
+    }
+  }, [error, navigate]);
 
   return (
     <Box sx={{
@@ -120,8 +124,6 @@ function TopRank() {
           <Alert severity="info" sx={{ mt: 2 }}>No leaderboard data available</Alert>
         )}
       </Box>
-
-      <Navbar />
     </Box>
   );
 }

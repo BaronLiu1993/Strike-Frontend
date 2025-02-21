@@ -9,6 +9,8 @@ const CreateHomework = ({ isTeacher }) => {
     description: "",
     dueDate: "",
   });
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,10 +24,12 @@ const CreateHomework = ({ isTeacher }) => {
     e.preventDefault();
 
     if (!isTeacher) {
-      setTimeout(() => window.location.reload(), 1000); // Reload after the user sees the error
+      setMessage("You do not have permission to create homework.");
+      setTimeout(() => window.location.reload(), 1000);
       return;
     }
 
+    setLoading(true);
     try {
       const response = await fetch(
         `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/homework/${courseId}/add-homework/`,
@@ -50,10 +54,12 @@ const CreateHomework = ({ isTeacher }) => {
         throw new Error(errorData.detail || "Failed to create homework");
       }
 
+      setMessage("Homework created successfully!");
       setFormData({ title: "", description: "", dueDate: "" });
-      setTimeout(() => window.location.reload(), 1000); // Reload after successful submission
     } catch (error) {
-      console.error("Error:", error);
+      setMessage(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,13 +77,16 @@ const CreateHomework = ({ isTeacher }) => {
           width: "100%",
           maxWidth: "22rem",
           padding: "16px",
-          border: "1px solid #ccc",
-          borderRadius: "8px",
           backgroundColor: "#fff",
-          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <Typography variant="h6" mb={2}>
+        <Typography 
+        sx={{
+          fontFamily: "Poppins, sans-serif",
+          "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+          "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+          marginTop:"16px"
+        }} variant="h6" mb={2}>
           Create Homework
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -89,6 +98,11 @@ const CreateHomework = ({ isTeacher }) => {
             value={formData.title}
             onChange={handleChange}
             required
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+            }}
           />
           <TextField
             fullWidth
@@ -100,18 +114,24 @@ const CreateHomework = ({ isTeacher }) => {
             required
             multiline
             rows={3}
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+            }}
           />
           <TextField
             fullWidth
             margin="normal"
-            label="Due Date"
             name="dueDate"
             type="date"
             value={formData.dueDate}
             onChange={handleChange}
             required
-            InputLabelProps={{
-              shrink: true,
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
             }}
           />
           <Button
@@ -119,12 +139,25 @@ const CreateHomework = ({ isTeacher }) => {
             variant="contained"
             color="primary"
             fullWidth
-            disabled={!isTeacher || !formData.title || !formData.description || !formData.dueDate}
-            sx={{ marginTop: "16px" }}
+            disabled={!formData.title || !formData.description || !formData.dueDate}
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+              marginTop:"16px"
+            }}
           >
-            Submit
+            {loading ? "Submitting..." : "Submit"}
           </Button>
         </form>
+        {message && (
+          <Typography
+            mt={2}
+            color={message.includes("successfully") ? "green" : "error"}
+          >
+            {message}
+          </Typography>
+        )}
       </Box>
     </Box>
   );

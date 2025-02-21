@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, TextField, Button, Typography } from "@mui/material";
 
-const CreateLesson = ({ isTeacher }) => {
+const CreateLesson = () => {
   const { courseId } = useParams();
   const [formData, setFormData] = useState({
     title: "",
@@ -41,7 +41,6 @@ const CreateLesson = ({ isTeacher }) => {
       }
 
       setFormData({ title: "", content: "" });
-      setTimeout(() => window.location.reload(), 1000); // Reload after successful submission
     } catch (error) {
       console.error(error);
     }
@@ -61,13 +60,14 @@ const CreateLesson = ({ isTeacher }) => {
           width: "100%",
           maxWidth: "22rem",
           padding: "16px",
-          border: "1px solid #ccc",
-          borderRadius: "8px",
-          backgroundColor: "#fff",
-          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <Typography variant="h6" mb={2}>
+        <Typography sx={{
+                    fontFamily: "Poppins, sans-serif",
+                    "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+                    "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+                    }}variant="h6" 
+                    mb={2}>
           Create Lesson
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -79,6 +79,11 @@ const CreateLesson = ({ isTeacher }) => {
             value={formData.title}
             onChange={handleChange}
             required
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+              }}
           />
           <TextField
             fullWidth
@@ -90,14 +95,24 @@ const CreateLesson = ({ isTeacher }) => {
             required
             multiline
             rows={3}
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+              }}
           />
           <Button
             type="submit"
             variant="contained"
             color="primary"
+            disabled = {!formData.title || !formData.content}
             fullWidth
-            disabled={!isTeacher}
-            sx={{ marginTop: "16px" }}
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+              marginTop: "16px" }}
+            
           >
             Submit
           </Button>

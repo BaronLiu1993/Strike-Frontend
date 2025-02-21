@@ -47,7 +47,10 @@ const SubmissionPage = () => {
     };
 
     fetchStudentData();
-  }, []);
+    if (error) {
+      navigate("/"); 
+    }
+  }, [error, navigate]);
 
   const handleVideoChange = (e) => {
     setVideo(e.target.files[0]);
@@ -105,16 +108,6 @@ const SubmissionPage = () => {
       </Box>
     );
   }
-
-  if (error) {
-      const navigate = useNavigate();
-    
-      useEffect(() => {
-        navigate("/login"); 
-      }, [navigate]);
-    
-      return null; 
-    }
 
   return (
     <motion.div

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, TextField, Button, Typography } from "@mui/material";
 
-const CreatePost = ({ isTeacher }) => {
+const CreatePost = () => {
   const { courseId } = useParams();
   const [formData, setFormData] = useState({
     title: "",
@@ -16,12 +16,6 @@ const CreatePost = ({ isTeacher }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!isTeacher) {
-      setTimeout(() => window.location.reload(), 1000); // Reload after the user sees the error
-      return;
-    }
-
     try {
       const response = await fetch(
         `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/posts/${courseId}/add-posts/`,
@@ -41,7 +35,7 @@ const CreatePost = ({ isTeacher }) => {
       }
 
       setFormData({ title: "", content: "" });
-      setTimeout(() => window.location.reload(), 1000); // Reload after successful submission
+      setTimeout(() => window.location.reload()); 
     } catch (error) {
       console.error(error);
     }
@@ -61,13 +55,14 @@ const CreatePost = ({ isTeacher }) => {
           width: "100%",
           maxWidth: "22rem",
           padding: "16px",
-          border: "1px solid #ccc",
-          borderRadius: "8px",
           backgroundColor: "#fff",
-          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <Typography variant="h6" mb={2}>
+        <Typography sx={{
+              fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+            }} variant="h6" mb={2}>
           Create Post
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -79,6 +74,11 @@ const CreatePost = ({ isTeacher }) => {
             value={formData.title}
             onChange={handleChange}
             required
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+            }}
           />
           <TextField
             fullWidth
@@ -90,14 +90,24 @@ const CreatePost = ({ isTeacher }) => {
             required
             multiline
             rows={3}
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+            }}
           />
           <Button
             type="submit"
             variant="contained"
             color="primary"
             fullWidth
-            disabled={!isTeacher}
-            sx={{ marginTop: "16px" }}
+            disabled = {!formData.title || !formData.content}
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
+              marginTop:"16px"
+            }}
           >
             Submit
           </Button>

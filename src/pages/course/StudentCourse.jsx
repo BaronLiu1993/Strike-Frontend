@@ -19,8 +19,6 @@ const StudentCourse = () => {
   const [error, setError] = useState("");
   const [courseDetails, setCourseDetails] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [lessons, setLessons] = useState([]);
-  const [homeworks, setHomeworks] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,8 +29,6 @@ const StudentCourse = () => {
         const urls = [
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/${courseId}/`,
           `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/posts/${courseId}/posts/`,
-          `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/lesson/${courseId}/lessons/`,
-          `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/homework/${courseId}/homeworks/`,
         ];
 
         const responses = await Promise.all(
@@ -58,8 +54,6 @@ const StudentCourse = () => {
 
         setCourseDetails(courseData);
         setPosts(postsData || []);
-        setLessons(lessonsData || []);
-        setHomeworks(homeworkData || []);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -68,7 +62,10 @@ const StudentCourse = () => {
     };
 
     fetchData();
-  }, [courseId]);
+    if (error) {
+      navigate("/"); 
+    }
+  }, [courseId, error, navigate]);
 
   const handleSwipe = (event, info) => {
     if (info.offset.x > 100) navigate(-1);
@@ -85,14 +82,6 @@ const StudentCourse = () => {
         <CircularProgress size={50} sx={{ color: "#3f51b5" }} />
       </Box>
     );
-  }
-
-  if (error) {
-    const navigate = useNavigate();
-    useEffect(() => {
-      navigate("/login"); 
-    }, [navigate]);
-    return null; 
   }
 
   return (

@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useNavigate } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Typography, CircularProgress, Alert, Box } from "@mui/material";
 import { motion } from "framer-motion";
@@ -9,6 +10,7 @@ const Lesson = () => {
   const [lessons, setLessons] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -37,7 +39,10 @@ const Lesson = () => {
     };
 
     fetchLessons();
-  }, [courseId]);
+    if (error) {
+        navigate("/"); 
+      }
+  }, [courseId, error, navigate]);
 
   if (loading) {
     return (

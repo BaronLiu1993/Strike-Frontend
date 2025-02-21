@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { Typography, CssBaseline, CircularProgress, Box } from "@mui/material";
@@ -11,41 +11,61 @@ const StudentHome = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
+  const [points, setPoints] = useState(0);
   const controls = useAnimation();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
+    setLoading(true);
     const accessToken = localStorage.getItem("access_token");
-    const getCourses = async () => {
-      try {
-        const response = await fetch(
-          "https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            credentials: "include",
-          }
-        );
 
-        if (!response.ok) throw new Error("Failed to fetch courses");
+    try {
+      const [coursesRes, studentRes] = await Promise.all([
+        fetch("http://127.0.0.1:8000/api/v1/course/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          credentials: "include",
+        }),
+        fetch("http://127.0.0.1:8000/register/student/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          credentials: "include",
+        }),
+      ]);
 
-        const data = await response.json();
-        setCourses(data.results || data || []);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getCourses();
+      if (!coursesRes.ok || !studentRes.ok) throw new Error("Failed to fetch data");
+      const coursesData = await coursesRes.json();
+      const studentData = await studentRes.json();
+      setCourses(coursesData.results || coursesData || []);
+      setPoints(studentData.details?.points || 0); 
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+  useEffect(() => {
+    if (error) {
+      navigate("/");
+    }
+  }, [error, navigate]);
 
   const handleCourseClick = (courseId) => {
     navigate(`/course-student/${courseId}`);
+  };
+
+  const handleLeaderboardClick = () => {
+    navigate("/leaderboard");
   };
 
   const swipeHandler = (event, info) => {
@@ -72,15 +92,6 @@ const StudentHome = () => {
     );
   }
 
-  if (error) {
-    const navigate = useNavigate();
-  
-    useEffect(() => {
-      navigate("/login"); 
-    }, [navigate]);
-  
-    return null; 
-  }
 
   return (
     <>
@@ -146,8 +157,6 @@ const StudentHome = () => {
               </ul>
             )}
           </motion.div>
-
-          {/* Leaderboard Section */}
           <motion.div className="flex flex-col w-full mt-6">
             <Typography variant="h5" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", ml: 2 }}>
               Strike Leaderboard
@@ -155,26 +164,26 @@ const StudentHome = () => {
 
             <div className="flex space-x-4 mt-4">
               <motion.div
-                className="cursor-pointer border flex items-center justify-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
+                className="cursor-pointer border flex items-center justify-center rounded-2xl p-4 flex-1"
                 style={{ color: "#3f51b5" }}
-                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <GradeIcon style={{ fontSize: "3rem" }} />
                 <div className="flex flex-col ml-4">
                   <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif" }}>
-                    Grades
+                    Points
                   </Typography>
                   <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-                    98
+                    {points}
                   </Typography>
                 </div>
               </motion.div>
+              
 
               <motion.div
-                className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
+                className="cursor-pointer border flex items-center rounded-2xl p-4 flex-1"
                 style={{ color: "#3f51b5" }}
-                whileHover={{ scale: 1.05 }}
+                onClick={() => handleLeaderboardClick()}
                 whileTap={{ scale: 0.95 }}
               >
                 <ScoreboardIcon style={{ fontSize: "3rem" }} />

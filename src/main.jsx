@@ -19,16 +19,15 @@ import ViewSubmissions from './pages/views/ViewSubmissions.jsx';
 import AddComment from './pages/create/AddComment.jsx';
 import AddStudents from './pages/create/AddStudents.jsx';
 
+import TeacherHomework from './pages/course/TeacherHomework.jsx';
 import Homework from './pages/course/Homework.jsx'; 
 import Lesson from './pages/course/Lesson.jsx'; 
 
 import StudentCourse from './pages/course/StudentCourse.jsx';
-import TeacherCourse from './pages/course/TeacherCourse.jsx';
 import TeacherCourseView from './pages/course/TeacherCourseView.jsx';
 
 import Leaderboard from './pages/rank/TopRank.jsx';
 
-// Back button handling component
 const BackButtonHandler = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -67,7 +66,6 @@ createRoot(document.getElementById('root')).render(
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register2" element={<Register2 />} />
-        <Route path="/course-teacher/:courseId" element={<TeacherCourse />} />
         <Route path="/course-student/:courseId" element={<StudentCourse />} />
         <Route path="/course-teacher-view/:courseId" element={<TeacherCourseView />} />
         <Route path="/create-course" element={<CreateCourse />} />
@@ -77,6 +75,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/add-students" element={<AddStudents />} />
         <Route path="/homework/:courseId" element={<Homework />} />
         <Route path="/lesson/:courseId" element={<Lesson />} />
+        <Route path="/homework-teacher/:courseId" element={<TeacherHomework />} />
       </Routes>
     </Router>
   </StrictMode>

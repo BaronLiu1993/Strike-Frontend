@@ -1,25 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Box, TextField, Button, Typography } from "@mui/material";
 
 const CreateCourse = () => {
-  const [description, setDescription] = useState('');
-  const [title, setTitle] = useState('');
-  const [message, setMessage] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (!title.trim() || !description.trim()) {
-      setMessage('Title and description are required.');
+      setMessage("Title and description are required.");
       return;
     }
     setLoading(true);
     try {
-      const response = await fetch('https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/', {
-        method: 'POST',
+      const response = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           title,
           description,
@@ -29,16 +30,13 @@ const CreateCourse = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to create course work');
+        throw new Error(errorData.detail || "Failed to create course");
       }
 
       const data = await response.json();
-      setMessage(`Course work created successfully: ${data.title}`);
-      setTitle('');
-      setDescription('');
-      setTimeout(() => {
-        window.location.reload(); // Reload the page
-      }, 1000); // Delay for the user to see the success message
+      setMessage(`Course created successfully: ${data.title}`);
+      setTitle("");
+      setDescription("");
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -47,43 +45,65 @@ const CreateCourse = () => {
   };
 
   return (
-    <div className="mt-10 max-w-md mx-auto">
-      <h2 className="text-lg font-bold mb-4">Create Course Work</h2>
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">
-          Title:
-          <input
-            type="text"
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "16px",
+      }}
+    >
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: "22rem",
+          padding: "16px",
+          border: "1px solid #ccc",
+        }}
+      >
+        <Typography variant="h6" mb={2}>
+          Create Course
+        </Typography>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-500"
-            placeholder="Enter course title"
+            required
           />
-        </label>
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">
-          Description:
-          <textarea
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-500"
-            rows="4"
-            placeholder="Enter course description"
+            required
+            multiline
+            rows={3}
           />
-        </label>
-      </div>
-      <button
-        onClick={handleSubmit}
-        className={`${
-          loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
-        } text-white px-4 py-2 rounded`}
-        disabled={loading}
-      >
-        {loading ? 'Submitting...' : 'Submit'}
-      </button>
-      {message && <p className={`mt-4 ${loading ? 'text-gray-500' : 'text-green-500'}`}>{message}</p>}
-    </div>
+          <Button
+            onClick={handleSubmit}
+            variant="contained"
+            color="primary"
+            fullWidth
+            disabled={loading || !title || !description}
+            sx={{ marginTop: "16px" }}
+          >
+            {loading ? "Submitting..." : "Submit"}
+          </Button>
+        </form>
+        {message && (
+          <Typography
+            mt={2}
+            color={message.includes("successfully") ? "green" : "error"}
+          >
+            {message}
+          </Typography>
+        )}
+      </Box>
+    </Box>
   );
 };
 
