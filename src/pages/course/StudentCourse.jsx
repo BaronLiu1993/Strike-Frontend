@@ -93,7 +93,7 @@ const StudentCourse = () => {
       onDragEnd={handleSwipe}
     >
       <motion.div
-        className="p-6 flex-grow flex flex-col bg-white rounded-md items-center w-full mt-[3rem]"
+        className="p-6 flex-grow flex flex-col bg-white rounded-md items-center w-full mt-10"
         style={{ flex: 1, overflowY: "auto", paddingBottom: "64px" }}
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -103,7 +103,7 @@ const StudentCourse = () => {
           <motion.div
             className="border flex flex-col justify-center rounded-2xl p-4 w-full"
           >
-            <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", textAlign: "center" }}>
+            <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", textAlign: "center" }}>
               {courseDetails.title}
             </Typography>
             <Typography variant="body1" sx={{ fontFamily: "Poppins, sans-serif", textAlign: "center" }}>
@@ -116,7 +116,7 @@ const StudentCourse = () => {
           <motion.div
             onClick={() => handleNavigation(`/lesson/${courseId}/`)}
             className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
-            style={{ color: "#3f51b5" }}
+            style={{ color: "#5b3819" }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -128,7 +128,7 @@ const StudentCourse = () => {
           <motion.div
             onClick={() => handleNavigation(`/homework/${courseId}/`)}
             className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
-            style={{ color: "#3f51b5" }}
+            style={{ color: "#5b3819" }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -140,7 +140,7 @@ const StudentCourse = () => {
         </motion.div>
 
         <motion.div className="w-full mt-6 overflow-hidden">
-          <Typography variant="h5" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", mb: 2 }}>
+          <Typography variant="h5" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", mb: 2 }}>
             Posts
           </Typography>
           <motion.div drag="x" dragConstraints={{ left: -300, right: 300 }} className="flex flex-col space-y-5">
@@ -151,7 +151,7 @@ const StudentCourse = () => {
                   className="border-2 rounded-2xl overflow-hidden flex flex-col p-4"
                 >
                   <div className="flex items-center">
-                    <Avatar sx={{ backgroundColor: "#3f51b5", marginRight: "0.5rem" }}>
+                    <Avatar sx={{ backgroundColor: "#5b3819", marginRight: "0.5rem" }}>
                       {post.author ? post.author[0] : "U"}
                     </Avatar>
                     <Typography variant="subtitle1" sx={{ fontFamily: "Poppins, sans-serif", fontWeight: "bold" }}>

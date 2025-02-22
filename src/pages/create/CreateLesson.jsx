@@ -17,11 +17,6 @@ const CreateLesson = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isTeacher) {
-      setTimeout(() => window.location.reload(), 1000); // Reload after the user sees the error
-      return;
-    }
-
     try {
       const response = await fetch(
         `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/lesson/${courseId}/add-lesson/`,

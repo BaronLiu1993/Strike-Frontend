@@ -4,10 +4,8 @@ import './index.css';
 import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { App } from '@capacitor/app';
 
-// Import your pages
 import Login from './pages/auth/Login.jsx';
 import Register from './pages/auth/Register.jsx';
-import Register2 from './pages/auth/Register2.jsx';
 
 import StudentHome from './pages/home/StudentHome.jsx';
 import TeacherHome from './pages/home/TeacherHome.jsx';
@@ -65,7 +63,6 @@ createRoot(document.getElementById('root')).render(
         <Route path="/student-home" element={<StudentHome />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/register2" element={<Register2 />} />
         <Route path="/course-student/:courseId" element={<StudentCourse />} />
         <Route path="/course-teacher-view/:courseId" element={<TeacherCourseView />} />
         <Route path="/create-course" element={<CreateCourse />} />

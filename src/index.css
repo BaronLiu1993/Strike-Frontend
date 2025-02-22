@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-@font-face {
-  font-family: "Oswald";
-  src: url("React_Test/Test_Strike/test_strike/src/fonts/roboto/Roboto-Black.ttf");
-}
-
 .page-container {
   position: absolute;
   width: 100%;

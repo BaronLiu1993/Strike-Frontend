@@ -69,9 +69,9 @@ const TeacherHomework = () => {
       <motion.div
         className="border flex items-center rounded-2xl p-4 mt-[3rem] w-full "
       >
-        <WorkIcon sx={{ fontSize: "4rem", color: "#3f51b5" }} />
+        <WorkIcon sx={{ fontSize: "4rem", color: "#5b3819" }} />
         <div className="ml-4">
-          <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5" }}>
+          <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819" }}>
             Homework
           </Typography>
           <Typography variant="body1" sx={{ fontFamily: "Poppins, sans-serif" }}>
@@ -92,10 +92,10 @@ const TeacherHomework = () => {
               className="border flex justify-between items-center p-4 rounded-2xl"
             >
               <div className="flex flex-col">
-                <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5" }}>
+                <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819" }}>
                   {homework.title}
                 </Typography>
-                <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif", mt: 1 }}>
+                <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif"}}>
                   {homework.description}
                 </Typography>
                 <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif", color: "#888" }}>
@@ -104,7 +104,7 @@ const TeacherHomework = () => {
               </div>
             
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <button style = {{fontFamily: "Poppins, sans-serif"}}className="bg-[#3f51b5] text-white px-4 py-2 rounded" onClick={() => handleHomeworkSubmission(homework.id)}>
+                <button style = {{fontFamily: "Poppins, sans-serif"}} className="bg-[#5b3819] text-white px-4 py-2 rounded" onClick={() => handleHomeworkSubmission(homework.id)}>
                     Grade
                 </button>
                 </motion.div>

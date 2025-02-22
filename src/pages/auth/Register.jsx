@@ -88,7 +88,7 @@ const Register = () => {
     >
       <Typography style={{
                   fontFamily: "Poppins, sans-serif",
-                  color: "#3f51b5",
+                  color: "#5b3819",
               }} 
               variant="h5" 
               textAlign="center" 
@@ -104,7 +104,7 @@ const Register = () => {
       <TextField
       style={{
         fontFamily: "Poppins, sans-serif",
-        color: "#3f51b5",
+        color: "#5b3819",
     }}
         label="Username"
         fullWidth
@@ -157,14 +157,14 @@ const Register = () => {
         onChange={(e) => setConfirmPassword(e.target.value)}
         sx={{
           fontFamily: "Poppins, sans-serif",
-          "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, // Ensures input field text uses Poppins
-          "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" }, // Ensures label uses Poppins
+          "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+          "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" }, 
         }}
       />
 
       <Typography style={{
                   fontFamily: "Poppins, sans-serif",
-                  color: "#3f51b5",
+                  color: "#5b3819",
               }} variant="body2"
               color="textSecondary"
               mb={2}>
@@ -181,7 +181,7 @@ const Register = () => {
         onClick={handleRegister}
         style={{
           fontFamily: "Poppins, sans-serif",
-          background: "#3f51b5",
+          background: "#5b3819",
       }}
         sx={{
           padding: '0.8rem',

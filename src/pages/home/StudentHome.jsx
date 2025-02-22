@@ -21,7 +21,7 @@ const StudentHome = () => {
 
     try {
       const [coursesRes, studentRes] = await Promise.all([
-        fetch("http://127.0.0.1:8000/api/v1/course/", {
+        fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -29,7 +29,7 @@ const StudentHome = () => {
           },
           credentials: "include",
         }),
-        fetch("http://127.0.0.1:8000/register/student/", {
+        fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/register/student/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -111,12 +111,12 @@ const StudentHome = () => {
           transition={{ duration: 0.5 }}
         >
           <motion.div
-            className="h-[4rem] w-full flex items-center rounded-t-md"
+            className="h-[4rem] w-full flex items-center rounded-t-md mt-10"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", ml: 2 }}>
+            <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", ml: 2}}>
               Welcome Back to Strike
             </Typography>
           </motion.div>
@@ -124,7 +124,7 @@ const StudentHome = () => {
           <motion.div className="w-full mt-4">
             <Typography
               variant="h5"
-              sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", ml: 2, my: 2 }}
+              sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", ml: 2, my: 2 }}
             >
               Courses
             </Typography>
@@ -139,7 +139,7 @@ const StudentHome = () => {
                     key={course.id}
                     onClick={() => handleCourseClick(course.id)}
                     className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl"
-                    style={{ color: "#3f51b5" }}
+                    style={{ color: "#5b3819" }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -158,14 +158,14 @@ const StudentHome = () => {
             )}
           </motion.div>
           <motion.div className="flex flex-col w-full mt-6">
-            <Typography variant="h5" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", ml: 2 }}>
+            <Typography variant="h5" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", ml: 2 }}>
               Strike Leaderboard
             </Typography>
 
-            <div className="flex space-x-4 mt-4">
+            <div className="flex space-x-4 mt-5">
               <motion.div
-                className="cursor-pointer border flex items-center justify-center rounded-2xl p-4 flex-1"
-                style={{ color: "#3f51b5" }}
+                className="border flex items-center rounded-2xl p-4 flex-1"
+                style={{ color: "#5b3819" }}
                 whileTap={{ scale: 0.95 }}
               >
                 <GradeIcon style={{ fontSize: "3rem" }} />
@@ -182,7 +182,7 @@ const StudentHome = () => {
 
               <motion.div
                 className="cursor-pointer border flex items-center rounded-2xl p-4 flex-1"
-                style={{ color: "#3f51b5" }}
+                style={{ color: "#5b3819" }}
                 onClick={() => handleLeaderboardClick()}
                 whileTap={{ scale: 0.95 }}
               >

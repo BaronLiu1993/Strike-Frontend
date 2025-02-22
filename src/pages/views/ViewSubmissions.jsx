@@ -102,9 +102,9 @@ const ViewSubmissions = () => {
       transition={{ duration: 0.5 }}
     >
       <motion.div className="border flex items-center rounded-2xl p-4 mt-[3rem] w-full bg-white shadow-lg">
-        <AssignmentTurnedIn sx={{ fontSize: "4rem", color: "#3f51b5" }} />
+        <AssignmentTurnedIn sx={{ fontSize: "4rem", color: "#5b3819" }} />
         <div className="ml-4">
-          <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5" }}>
+          <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819" }}>
             Submissions
           </Typography>
           <Typography variant="body1" sx={{ fontFamily: "Poppins, sans-serif" }}>
@@ -203,9 +203,9 @@ const ViewSubmissions = () => {
                         fullWidth
                         onClick={() => handleGradeSubmit(submission.id, submission.grade)}
                         sx={{
-                          backgroundColor: "#3f51b5",
+                          backgroundColor: "#5b3819",
                           color: "#fff",
-                          "&:hover": { backgroundColor: "#303f9f" },
+                          "&:hover": { backgroundColor: "#5b3819" },
                         }}
                       >
                         Submit Grade

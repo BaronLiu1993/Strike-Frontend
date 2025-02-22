@@ -6,7 +6,6 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-import Navbar from '../navbar/Navbar';
 import '@fontsource/poppins'; 
 
 
@@ -69,7 +68,7 @@ function TopRank() {
         position: 'relative',
       }}>
         <div 
-        className = "font-poppins text-4xl font-bold text-[#3f51b5]"
+        className = "font-poppins text-4xl font-bold text-[#5b3819]"
         style={{
                 fontFamily: "Poppins, sans-serif",
               }} >
@@ -103,19 +102,19 @@ function TopRank() {
             }}
             className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl"
               style={{
-                  color: "#3f51b5",
+                  color: "#5b3819",
                   fontFamily: "Poppins, sans-serif",}}
             >
               <Typography variant="h6" sx={{ fontWeight: 'bold', width: '10%' }}>{index + 1}</Typography>
               <Box sx={{ flex: 1 }}>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }} style={{
-                  color: "#3f51b5",
+                  color: "#5b3819",
                   fontFamily: "Poppins, sans-serif",}}>{student.username}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'gray' }} style={{
-                  color: "#3f51b5",
+                  color: "#5b3819",
                   fontFamily: "Poppins, sans-serif",}}>
-                    {student.average_grade.toFixed(2)} points</Typography>
+                    {student.average_grade.toFixed(2)} % Average Score</Typography>
               </Box>
               <Typography variant="h6" sx={{ fontWeight: 'bold', color: index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : 'gray' }}></Typography>
             </Box>

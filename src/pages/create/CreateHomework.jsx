@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, TextField, Button, Typography } from "@mui/material";
 
-const CreateHomework = ({ isTeacher }) => {
+const CreateHomework = () => {
   const { courseId } = useParams();
   const [formData, setFormData] = useState({
     title: "",
@@ -22,13 +22,6 @@ const CreateHomework = ({ isTeacher }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!isTeacher) {
-      setMessage("You do not have permission to create homework.");
-      setTimeout(() => window.location.reload(), 1000);
-      return;
-    }
-
     setLoading(true);
     try {
       const response = await fetch(

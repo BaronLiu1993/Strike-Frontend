@@ -47,9 +47,7 @@ const SubmissionPage = () => {
     };
 
     fetchStudentData();
-    if (error) {
-      navigate("/"); 
-    }
+    
   }, [error, navigate]);
 
   const handleVideoChange = (e) => {
@@ -101,6 +99,21 @@ const SubmissionPage = () => {
     }
   };
 
+  if (error) {
+    console.log(error);
+    if (error.includes("503")) {
+      return (
+        <Box className="flex justify-center items-center min-h-screen bg-gray-100">
+          <Typography variant="body1" color="error">
+            You can only submit once.
+          </Typography>
+        </Box>
+      );
+    } else {
+      navigate("/student-home");
+    }
+  }
+
   if (loading) {
     return (
       <Box className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -117,7 +130,7 @@ const SubmissionPage = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="w-full max-w-lg space-y-6">
-        <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", fontWeight: "bold" }}>
+        <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", fontWeight: "bold" }}>
           Your Work
         </Typography>
 
@@ -142,7 +155,7 @@ const SubmissionPage = () => {
             {video ? (
               <motion.div className="border flex items-center justify-between rounded-2xl p-4 h-[6rem] w-full">
                 <div className = "flex flex-col">
-                  <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5" }}>
+                  <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819" }}>
                     {video.name}
                   </Typography>
                   <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif", color: "#666" }}>
@@ -155,7 +168,7 @@ const SubmissionPage = () => {
               </motion.div>
             ) : (
               <motion.div className="flex flex-col items-center">
-                <CloudIcon sx={{ color: "#3f51b5", fontSize: "8rem" }} />
+                <CloudIcon sx={{ color: "#5b3819", fontSize: "8rem" }} />
                 <Typography variant="body1" sx={{ fontFamily: "Poppins, sans-serif", color: "#666", mt: 2 }}>
                   No attachments uploaded.
                 </Typography>
@@ -203,7 +216,7 @@ const SubmissionPage = () => {
         ) : (
           <motion.label
             style={{ fontFamily: "Poppins, sans-serif" }}
-            className="w-full bg-[#3f51b5] text-white py-3 rounded-lg text-lg text-center cursor-pointer block"
+            className="w-full bg-[#5b3819] text-white py-3 rounded-lg text-lg text-center cursor-pointer block"
           >
             Select Video
             <input type="file" onChange={handleVideoChange} accept="video/*" className="hidden" />

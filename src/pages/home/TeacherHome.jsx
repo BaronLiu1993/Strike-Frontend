@@ -14,7 +14,7 @@ const TeacherHome = () => {
   const [newCourse, setNewCourse] = useState({ title: "", description: "" });
   const [creating, setCreating] = useState(false);
   const [createMessage, setCreateMessage] = useState("");
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const controls = useAnimation();
   const navigate = useNavigate();
 
@@ -64,6 +64,14 @@ const TeacherHome = () => {
     } else if (info.offset.x < -100) {
       navigate(1); 
     }
+  };
+
+  const openCreateDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const closeCreateDialog = () => {
+    setOpenDialog(false);
   };
 
   const handleCreateCourse = async () => {
@@ -124,7 +132,7 @@ const TeacherHome = () => {
         onDragEnd={swipeHandler}
       >
         <motion.div
-          className="p-6 flex-grow flex flex-col bg-white rounded-md items-center w-full"
+          className="p-6 flex-grow flex flex-col bg-white rounded-md items-center w-full mt-10"
           style={{ flex: 1, overflowY: "auto", paddingBottom: "64px" }}
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -136,7 +144,7 @@ const TeacherHome = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", ml: 2 }}>
+            <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", ml: 2 }}>
               Welcome Back to Strike
             </Typography>
           </motion.div>
@@ -144,7 +152,7 @@ const TeacherHome = () => {
           <motion.div className="w-full mt-4">
             <Typography
               variant="h5"
-              sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", ml: 2, my: 2 }}
+              sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", ml: 2, my: 2 }}
             >
               Courses
             </Typography>
@@ -158,10 +166,9 @@ const TeacherHome = () => {
                   <motion.li
                     key={course.id}
                     onClick={() => handleCourseClick(course.id)}
-                    className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl"
-                    style={{ color: "#3f51b5" }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="cursor-pointer border flex items-center rounded-2xl p-4 shadow-md hover:shadow-xl"
+                    style={{ color: "#5b3819" }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     <MusicNoteIcon style={{ fontSize: "3rem" }} />
                     <div className="flex flex-col ml-4">
@@ -178,17 +185,17 @@ const TeacherHome = () => {
             )}
           </motion.div>
           <motion.div className="flex flex-col w-full mt-6">
-            <Typography variant="h5" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", ml: 2 }}>
+            <Typography variant="h5" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", ml: 2 }}>
               Strike Leaderboard
             </Typography>
 
             <div className="flex space-x-4 mt-4">
               <motion.div
                 className="cursor-pointer border flex items-center justify-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
-                style={{ color: "#3f51b5" }}
+                style={{ color: "#5b3819" }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setOpenCreateDialog(true)}
+                onClick={() => openCreateDialog(true)}
               >
                 <GradeIcon style={{ fontSize: "3rem" }} />
                 <div className="flex flex-col ml-4">
@@ -200,11 +207,11 @@ const TeacherHome = () => {
                   </Typography>
                 </div>
                 <Dialog
-                    open={openCreateDialog}
-                    onClose={() => setOpenCreateDialog(false)}
+                    open={openDialog} 
+                    onClose={() => closeCreateDialog}
                     maxWidth="xs"
                   >
-                    <DialogTitle sx={{ fontFamily: "Poppins, sans-serif", font: "bold", color: "#3f51b5", ml: 2 }}>Create a New Course</DialogTitle>
+                    <DialogTitle sx={{ fontFamily: "Poppins, sans-serif", font: "bold", color: "#5b3819", ml: 2 }}>Create a New Course</DialogTitle>
                     <DialogContent>
                       <TextField
                         fullWidth
@@ -231,7 +238,6 @@ const TeacherHome = () => {
                         value={newCourse.description}
                         onChange={(e) =>
                           setNewCourse({ ...newCourse, description: e.target.value })
-
                         }
                         sx={{
                           fontFamily: "Poppins, sans-serif",
@@ -252,14 +258,12 @@ const TeacherHome = () => {
                       <Button
                         sx={{
                           fontFamily: "Poppins, sans-serif",
-                          color: "#3f51b5",
+                          color: "#5b3819",
                           backgroundColor: "#f5f5f5",
                           width: "90%",
                           fontSize: "1rem", 
                         }}
-                        onClick={() => {
-                          setOpenCreateDialog(false);
-                        }}
+                        onClick={() => closeCreateDialog()}
                         color="secondary"
                       >
                         Cancel
@@ -271,10 +275,10 @@ const TeacherHome = () => {
                         sx={{
                           fontFamily: "Poppins, sans-serif",
                           color: "white",
-                          backgroundColor: "#3f51b5",
+                          backgroundColor: "#5b3819",
                           width: "90%",
                           fontSize: "1rem", 
-                          "&:hover": { backgroundColor: "#303f9f" }, // Darker hover effect
+                          "&:hover": { backgroundColor: "#5b3819" }, 
                         }}
                       >
                         {creating ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Create"}
@@ -283,11 +287,9 @@ const TeacherHome = () => {
 
                   </Dialog>
               </motion.div>
-              
-
               <motion.div
                 className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
-                style={{ color: "#3f51b5" }}
+                style={{ color: "#5b3819" }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleLeaderboardClick()}

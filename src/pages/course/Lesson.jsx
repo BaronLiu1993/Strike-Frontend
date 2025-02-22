@@ -26,9 +26,7 @@ const Lesson = () => {
             credentials: "include",
           }
         );
-
         if (!response.ok) throw new Error("Failed to fetch lessons");
-
         const data = await response.json();
         setLessons(data || []);
       } catch (error) {
@@ -57,7 +55,6 @@ const Lesson = () => {
     useEffect(() => {
       navigate("/login"); 
     }, [navigate]);
-  
     return null; 
   }
 
@@ -69,11 +66,11 @@ const Lesson = () => {
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="border flex items-center rounded-2xl p-4 w-full mt-[3rem]"
+        className="border flex items-center rounded-2xl p-4 w-full mt-10"
       >
-        <LightbulbIcon sx={{ fontSize: "4rem", color: "#3f51b5" }} />
+        <LightbulbIcon sx={{ fontSize: "4rem", color: "#5b3819" }} />
         <div className="ml-4">
-          <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5" }}>
+          <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819" }}>
             Lessons
           </Typography>
           <Typography variant="body1" sx={{ fontFamily: "Poppins, sans-serif" }}>
@@ -94,7 +91,7 @@ const Lesson = () => {
               className="border flex flex-col p-4 rounded-2xl"
              
             >
-              <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5" }}>
+              <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819" }}>
                 {lesson.title}
               </Typography>
               <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif", mt: 1 }}>

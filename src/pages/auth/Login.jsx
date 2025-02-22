@@ -58,7 +58,7 @@ const Login = () => {
         } else {
           throw new Error("Unknown user role. Contact support.");
         }
-      }, 500);
+      });
     } catch (err) {
       setIsLoggingIn(false);
       setError(err.message);
@@ -90,16 +90,16 @@ const Login = () => {
             borderRadius: "10px"
           }}
         >
-          <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", textAlign: "center" }}>
+          <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", textAlign: "center" }}>
             Welcome Back!
           </Typography>
-          <Typography variant="subtitle1" sx={{ fontFamily: "Poppins, sans-serif", color: "#3f51b5", textAlign: "center", marginBottom: "1rem" }}>
+          <Typography variant="subtitle1" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", textAlign: "center", marginBottom: "1rem" }}>
             Enter your login details
           </Typography>
 
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-          <AudiotrackIcon sx={{ color: "#3f51b5", fontSize: "5rem", display: "block", margin: "0 auto 1rem" }} />
+          <AudiotrackIcon sx={{ color: "#5b3819", fontSize: "10rem", display: "block", margin: "0 auto 1rem" }} />
 
           <form onSubmit={submit} style={{ width: "100%" }}>
             <Box mb={2}>
@@ -111,6 +111,7 @@ const Login = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 sx={{
+                  color: "#5b3819",
                   fontFamily: "Poppins, sans-serif",
                   "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
                   "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
@@ -147,9 +148,9 @@ const Login = () => {
                   fontSize: "1rem",
                   fontWeight: "bold",
                   textTransform: "none",
-                  backgroundColor: "#3f51b5",
+                  backgroundColor: "#5b3819",
                   color: "#fff",
-                  "&:hover": { backgroundColor: "#3f51b5" },
+                  "&:hover": { backgroundColor: "#5b3819" },
                 }}
               >
                 {isLoggingIn ? "Logging in..." : "Login"}
@@ -158,13 +159,13 @@ const Login = () => {
           </form>
 
           <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-            <Typography variant="body2" sx={{ color: "#3f51b5", mr: 1 }}>
+            <Typography variant="body2" sx={{ color: "#5b3819", mr: 1 }}>
               Don't have an account?
             </Typography>
             <Button
               variant="text"
               sx={{
-                color: "#3f51b5",
+                color: "#5b3819",
                 fontWeight: "bold",
                 textTransform: "none",
                 "&:hover": { textDecoration: "underline" },
