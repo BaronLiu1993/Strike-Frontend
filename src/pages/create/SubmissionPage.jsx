@@ -190,10 +190,10 @@ const SubmissionPage = () => {
 
           <div className="flex flex-col items-center justify-between">
             {video ? (
-              <motion.div className="border flex items-center justify-between rounded-2xl p-4 h-[6rem] w-full">
+              <motion.div className="border flex flex-col items-center justify-between rounded-2xl p-4 h-[6rem] w-full">
                 <div className="flex flex-col">
                   <Typography
-                    variant="h6"
+                    variant="body2"
                     sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819" }}
                   >
                     {video.name}

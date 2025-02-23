@@ -79,7 +79,7 @@ const Login = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          paddingBottom: inputFocused ? "150px" : "0", 
+          paddingBottom: inputFocused ? "200px" : "0", 
         }}
       >
         <motion.div

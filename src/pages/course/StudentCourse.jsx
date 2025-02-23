@@ -122,7 +122,7 @@ const StudentCourse = () => {
             whileTap={{ scale: 0.95 }}
           >
             <SchoolIcon style={{ fontSize: "2rem" }} />
-            <Typography variant="h6" sx={{ ml: 1, fontFamily: "Poppins, sans-serif" }}>
+            <Typography variant="body2" sx={{ ml: 1, fontFamily: "Poppins, sans-serif" }}>
               Match
             </Typography>
           </motion.div>
@@ -134,7 +134,7 @@ const StudentCourse = () => {
             whileTap={{ scale: 0.95 }}
           >
             <ArticleIcon style={{ fontSize: "2rem" }} />
-            <Typography variant="h6" sx={{ ml: 1, fontFamily: "Poppins, sans-serif" }}>
+            <Typography variant="body2" sx={{ ml: 1, fontFamily: "Poppins, sans-serif" }}>
               Homework
             </Typography>
           </motion.div>
