@@ -9,5 +9,8 @@
     "CapacitorGestureNavigation": {
       "swipeBackEnabled": true
     }
+  },
+  "ios": {
+      "swipeBackEnabled": true
   }
 }

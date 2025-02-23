@@ -10,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
   const navigate = useNavigate();
 
   const submit = async (e) => {
@@ -78,6 +79,7 @@ const Login = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          paddingBottom: inputFocused ? "150px" : "0", 
         }}
       >
         <motion.div
@@ -109,11 +111,13 @@ const Login = () => {
                 variant="outlined"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                onFocus={() => setInputFocused(true)}
+                onBlur={() => setInputFocused(false)}
                 required
                 sx={{
                   color: "#5b3819",
                   fontFamily: "Poppins, sans-serif",
-                  "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+                  "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" },
                   "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
                 }}
               />
@@ -126,11 +130,13 @@ const Login = () => {
                 variant="outlined"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onFocus={() => setInputFocused(true)}
+                onBlur={() => setInputFocused(false)}
                 required
                 sx={{
                   fontFamily: "Poppins, sans-serif",
-                  "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, // Ensures input field text uses Poppins
-                  "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" }, // Ensures label uses Poppins
+                  "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" },
+                  "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
                 }}
               />
             </Box>

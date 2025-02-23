@@ -53,10 +53,38 @@ const BackButtonHandler = () => {
   return null;
 };
 
+const SwipeBackHandler = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+
+    const handleSwipeBack = () => {
+      if (location.pathname !== '/') {
+        navigate(-1);  
+      }
+    };
+    const addSwipeBackListener = () => {
+      if (window.Capacitor && window.Capacitor.isNative) {
+        App.addListener('swipeBack', handleSwipeBack);
+      }
+    };
+
+    addSwipeBackListener();
+
+    return () => {
+      App.removeAllListeners();  
+    };
+  }, [navigate, location]);
+
+  return null;
+};
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Router>
       <BackButtonHandler />
+      <SwipeBackHandler />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/teacher-home" element={<TeacherHome />} />

@@ -128,7 +128,7 @@ const TeacherCourseView = () => {
       onDragEnd={handleSwipe}
     >
       <motion.div
-        className="p-6 flex-grow flex flex-col bg-white rounded-md items-center w-full mt-10"
+        className="p-4 flex-grow flex flex-col bg-white rounded-md items-center w-full mt-10"
         style={{ flex: 1, overflowY: "auto", paddingBottom: "64px" }}
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -137,7 +137,7 @@ const TeacherCourseView = () => {
         
         {courseDetails && (
           <motion.div
-            className="border flex flex-col justify-center rounded-2xl p-4 w-full"
+            className="py-[1rem] border flex flex-col justify-center rounded-2xl w-full"
           >
             <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", textAlign: "center" }}>
               {courseDetails.title}
@@ -148,7 +148,7 @@ const TeacherCourseView = () => {
           </motion.div>
         )}
         <motion.div>
-          <div className = "m-[2rem] flex flex-row space-x-5">
+          <div className = "mt-[2rem] flex flex-row space-x-5">
           <Button sx={{
                     fontFamily: "Poppins, sans-serif",
                     "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
@@ -195,8 +195,8 @@ const TeacherCourseView = () => {
             whileTap={{ scale: 0.95 }}
           >
             <SchoolIcon style={{ fontSize: "2rem" }} />
-            <Typography variant="h6" sx={{ ml: 2, fontFamily: "Poppins, sans-serif" }}>
-            Match - In Progress
+            <Typography variant="h6" sx={{ ml: 1, fontFamily: "Poppins, sans-serif" }}>
+            Match
             </Typography>
           </motion.div>
           <motion.div
@@ -207,7 +207,7 @@ const TeacherCourseView = () => {
             whileTap={{ scale: 0.95 }}
           >
             <ArticleIcon style={{ fontSize: "2rem" }} />
-            <Typography variant="h6" sx={{ ml: 2, fontFamily: "Poppins, sans-serif" }}>
+            <Typography variant="h6" sx={{ ml: 1, fontFamily: "Poppins, sans-serif" }}>
               Homework
             </Typography>
           </motion.div>

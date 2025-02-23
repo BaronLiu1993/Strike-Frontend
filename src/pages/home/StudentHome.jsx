@@ -50,7 +50,7 @@ const StudentHome = () => {
       setCourses(coursesData.results || coursesData || []);
       const studentId = studentData.student_id;
       const spRes = await fetch(
-        `http://127.0.0.1:8000/api/v1/studentpointspositionviewset/${studentId}`,
+        `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/studentpointspositionviewset/${studentId}`,
         {
           method: "GET",
           headers: {
@@ -166,10 +166,10 @@ const StudentHome = () => {
               >
                 <HelpIcon style={{ fontSize: "3rem" }} />
                 <div className="flex flex-col ml-4">
-                  <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif" }}>
-                    Feature In Progress
+                  <Typography variant="body4" sx={{ fontFamily: "Poppins, sans-serif" }}>
+                    ...
                   </Typography>
-                  <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                     Match
                   </Typography>
                 </div>
@@ -246,7 +246,7 @@ const StudentHome = () => {
               >
                 <GradeIcon style={{ fontSize: "3rem" }} />
                 <div className="flex flex-col ml-4">
-                  <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif" }}>
+                  <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif" }}>
                     Tokens
                   </Typography>
                   <Typography variant="h5" sx={{ fontWeight: "bold" }}>
@@ -256,18 +256,17 @@ const StudentHome = () => {
               </motion.div>
 
               <motion.div
-                className="cursor-pointer border flex items-center rounded-2xl p-4 flex-1"
+                className="cursor-pointer border flex items-center rounded-2xl flex-1"
                 style={{ color: "#5b3819" }}
                 onClick={() => handleLeaderboardClick()}
                 whileTap={{ scale: 0.95 }}
               >
-                <ScoreboardIcon style={{ fontSize: "3rem" }} />
                 <div className="flex flex-col ml-4">
-                  <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif" }}>
-                  View the leaderboard
+                  <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif" }}>
+                  View Leaderboard
                   </Typography>
                   <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                  Your Rank: # {position}
+                  Rank {position}
                   </Typography>
                 </div>
               </motion.div>

@@ -59,8 +59,8 @@ const TeacherHome = () => {
 
   const closeCreateDialog = () => {
     setOpenDialog(false);
-    setNewCourse({ title: "", description: "" }); // Reset form fields
-    setCreateMessage(""); // Clear any messages
+    setNewCourse({ title: "", description: "" }); 
+    setCreateMessage(""); 
   };
 
   const handleCreateCourse = async () => {
@@ -87,7 +87,7 @@ const TeacherHome = () => {
 
       const createdCourse = await response.json();
       setCourses((prevCourses) => [...prevCourses, createdCourse]);
-      closeCreateDialog(); // Close the dialog after course creation
+      closeCreateDialog(); 
       setCreateMessage("Course created successfully!");
     } catch (err) {
       console.error("Error creating course:", err.message);
@@ -171,8 +171,8 @@ const TeacherHome = () => {
               >
                 <GradeIcon style={{ fontSize: "3rem" }} />
                 <div className="flex flex-col ml-4">
-                  <Typography variant="h6">Create</Typography>
-                  <Typography variant="h4" sx={{ fontWeight: "bold" }}>Courses</Typography>
+                  <Typography variant="body">Create</Typography>
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>Courses</Typography>
                 </div>
               </motion.div>
               <motion.div
@@ -180,10 +180,9 @@ const TeacherHome = () => {
                 style={{ color: "#5b3819" }}
                 onClick={handleLeaderboardClick}
               >
-                <ScoreboardIcon style={{ fontSize: "3rem" }} />
                 <div className="flex flex-col ml-4">
-                  <Typography variant="h6">See the</Typography>
-                  <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                  <Typography variant="body2">See the</Typography>
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                     Rank
                   </Typography>
                 </div>
