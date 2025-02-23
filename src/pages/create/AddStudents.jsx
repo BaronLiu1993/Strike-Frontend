@@ -41,6 +41,8 @@ const AddStudents = ({ courseIdentification }) => {
 
       setMessage("Students added successfully.");
       setStudentIds("");
+      setTimeout(() => window.location.reload()); 
+
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -54,7 +56,7 @@ const AddStudents = ({ courseIdentification }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "16px",
+        padding: "16px", 
       }}
     >
       <Box
@@ -65,7 +67,9 @@ const AddStudents = ({ courseIdentification }) => {
           backgroundColor: "#fff",
         }}
       >
-        <Typography variant="h6" mb={2}>
+        <Typography sx = {{fontFamily: "Poppins, sans-serif",
+                    "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+                    "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },}} variant="h6" mb={2}>
           Add Students to Course
         </Typography>
         <form onSubmit={(e) => e.preventDefault()}>
@@ -76,6 +80,9 @@ const AddStudents = ({ courseIdentification }) => {
             value={studentIds}
             onChange={(e) => setStudentIds(e.target.value)}
             required
+            sx = {{fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },}}
           />
           <Button
             onClick={handleAddStudents}
@@ -83,19 +90,13 @@ const AddStudents = ({ courseIdentification }) => {
             color="primary"
             fullWidth
             disabled={loading || !studentIds}
-            sx={{ marginTop: "16px" }}
+            sx={{ marginTop: "16px", fontFamily: "Poppins, sans-serif",
+              "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
+              "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" }, }}
           >
             {loading ? "Adding..." : "Add Students"}
           </Button>
         </form>
-        {message && (
-          <Typography
-            mt={2}
-            color={message.includes("successfully") ? "green" : "error"}
-          >
-            {message}
-          </Typography>
-        )}
       </Box>
     </Box>
   );

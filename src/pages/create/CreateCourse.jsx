@@ -37,6 +37,7 @@ const CreateCourse = () => {
       setMessage(`Course created successfully: ${data.title}`);
       setTitle("");
       setDescription("");
+      setTimeout(() => window.location.reload()); 
     } catch (error) {
       setMessage(error.message);
     } finally {

@@ -36,6 +36,8 @@ const CreateLesson = () => {
       }
 
       setFormData({ title: "", content: "" });
+      setTimeout(() => window.location.reload()); 
+
     } catch (error) {
       console.error(error);
     }

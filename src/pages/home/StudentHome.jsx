@@ -5,6 +5,7 @@ import { Typography, CssBaseline, CircularProgress, Box } from "@mui/material";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import GradeIcon from "@mui/icons-material/Grade";
 import ScoreboardIcon from "@mui/icons-material/Scoreboard";
+import HelpIcon from '@mui/icons-material/Help';
 import "@fontsource/poppins";
 
 const StudentHome = () => {
@@ -12,6 +13,8 @@ const StudentHome = () => {
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
   const [points, setPoints] = useState(0);
+  const [username, setUsername] = useState("");
+  const [position, setPosition] = useState(0)
   const controls = useAnimation();
   const navigate = useNavigate();
 
@@ -39,26 +42,38 @@ const StudentHome = () => {
         }),
       ]);
 
-      if (!coursesRes.ok || !studentRes.ok) throw new Error("Failed to fetch data");
+      if (!coursesRes.ok || !studentRes.ok)
+        throw new Error("Failed to fetch data");
+
       const coursesData = await coursesRes.json();
       const studentData = await studentRes.json();
       setCourses(coursesData.results || coursesData || []);
-      setPoints(studentData.details?.points || 0); 
+      const studentId = studentData.student_id;
+      const spRes = await fetch(
+        `http://127.0.0.1:8000/api/v1/studentpointspositionviewset/${studentId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!spRes.ok)
+        throw new Error("Failed to fetch student points/position");
+      const spData = await spRes.json();
+      setPoints(spData.points || 0);
+      setUsername(spData.username || "Null")
+      setPosition(spData.position || " Null")
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-  useEffect(() => {
-    if (error) {
-      navigate("/");
-    }
-  }, [error, navigate]);
 
   const handleCourseClick = (courseId) => {
     navigate(`/course-student/${courseId}`);
@@ -70,11 +85,16 @@ const StudentHome = () => {
 
   const swipeHandler = (event, info) => {
     if (info.offset.x > 100) {
-      navigate(-1); 
+      navigate(-1);
     } else if (info.offset.x < -100) {
-      navigate(1); 
+      navigate(1);
     }
   };
+
+  if (error) {
+    localStorage.removeItem("access_token"); 
+    navigate("/"); 
+  }
 
   if (loading) {
     return (
@@ -91,7 +111,6 @@ const StudentHome = () => {
       </Box>
     );
   }
-
 
   return (
     <>
@@ -116,20 +135,72 @@ const StudentHome = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Typography variant="h4" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", ml: 2}}>
-              Welcome Back to Strike
+            <Typography
+              variant="h4"
+              sx={{
+                fontFamily: "Poppins, sans-serif",
+                color: "#5b3819",
+                ml: 2,
+              }}
+            >
+              Welcome Back! <span className = "text-black">{username}</span>
             </Typography>
           </motion.div>
-
           <motion.div className="w-full mt-4">
             <Typography
               variant="h5"
-              sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", ml: 2, my: 2 }}
+              sx={{
+                fontFamily: "Poppins, sans-serif",
+                color: "#5b3819",
+                ml: 2,
+                my: 2,
+              }}
+            >
+              Matchs
+            </Typography>
+            <div className="flex space-x-4 mt-5">
+              <motion.div
+                className="border flex items-center rounded-2xl p-4 flex-1"
+                style={{ color: "#5b3819" }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <HelpIcon style={{ fontSize: "3rem" }} />
+                <div className="flex flex-col ml-4">
+                  <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif" }}>
+                    Feature In Progress
+                  </Typography>
+                  <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                    Match
+                  </Typography>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="border flex items-center rounded-2xl p-4 flex-1"
+                style={{ color: "#5b3819" }}
+              >
+                <div className="flex flex-col ml-4">
+                  <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif" }}>
+                    No Matches
+                  </Typography>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+          <motion.div className="w-full mt-4">
+            <Typography
+              variant="h5"
+              sx={{
+                fontFamily: "Poppins, sans-serif",
+                color: "#5b3819",
+                ml: 2,
+                my: 2,
+              }}
             >
               Courses
             </Typography>
             {courses.length === 0 ? (
-              <Typography sx = {{ml: 2}} variant="body1" color="textSecondary">
+              <Typography sx={{ ml: 2 }} variant="body1" color="textSecondary">
                 No courses found
               </Typography>
             ) : (
@@ -145,7 +216,10 @@ const StudentHome = () => {
                   >
                     <MusicNoteIcon style={{ fontSize: "3rem" }} />
                     <div className="flex flex-col ml-4">
-                      <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif", fontWeight: "bold" }}>
+                      <Typography
+                        variant="h6"
+                        sx={{ fontFamily: "Poppins, sans-serif", fontWeight: "bold" }}
+                      >
                         {course.title}
                       </Typography>
                       <Typography variant="body2" sx={{ fontFamily: "Poppins, sans-serif" }}>
@@ -158,10 +232,12 @@ const StudentHome = () => {
             )}
           </motion.div>
           <motion.div className="flex flex-col w-full mt-6">
-            <Typography variant="h5" sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", ml: 2 }}>
+            <Typography
+              variant="h5"
+              sx={{ fontFamily: "Poppins, sans-serif", color: "#5b3819", ml: 2 }}
+            >
               Strike Leaderboard
             </Typography>
-
             <div className="flex space-x-4 mt-5">
               <motion.div
                 className="border flex items-center rounded-2xl p-4 flex-1"
@@ -171,14 +247,13 @@ const StudentHome = () => {
                 <GradeIcon style={{ fontSize: "3rem" }} />
                 <div className="flex flex-col ml-4">
                   <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif" }}>
-                    Points
+                    Tokens
                   </Typography>
-                  <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                  <Typography variant="h5" sx={{ fontWeight: "bold" }}>
                     {points}
                   </Typography>
                 </div>
               </motion.div>
-              
 
               <motion.div
                 className="cursor-pointer border flex items-center rounded-2xl p-4 flex-1"
@@ -189,10 +264,10 @@ const StudentHome = () => {
                 <ScoreboardIcon style={{ fontSize: "3rem" }} />
                 <div className="flex flex-col ml-4">
                   <Typography variant="h6" sx={{ fontFamily: "Poppins, sans-serif" }}>
-                    See the
+                  View the leaderboard
                   </Typography>
                   <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                    Rank
+                  Your Rank: # {position}
                   </Typography>
                 </div>
               </motion.div>

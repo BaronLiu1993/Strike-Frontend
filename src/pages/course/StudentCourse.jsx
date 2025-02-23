@@ -62,9 +62,6 @@ const StudentCourse = () => {
     };
 
     fetchData();
-    if (error) {
-      navigate("/"); 
-    }
   }, [courseId, error, navigate]);
 
   const handleSwipe = (event, info) => {
@@ -82,6 +79,11 @@ const StudentCourse = () => {
         <CircularProgress size={50} sx={{ color: "#3f51b5" }} />
       </Box>
     );
+  }
+
+  if (error) {
+    localStorage.removeItem("access_token"); 
+    navigate("/"); 
   }
 
   return (
@@ -114,7 +116,6 @@ const StudentCourse = () => {
 
         <motion.div className="flex mt-6 w-full space-x-4">
           <motion.div
-            onClick={() => handleNavigation(`/lesson/${courseId}/`)}
             className="cursor-pointer border flex items-center rounded-2xl p-4 hover:bg-gray-50 shadow-md hover:shadow-2xl flex-1"
             style={{ color: "#5b3819" }}
             whileHover={{ scale: 1.05 }}
@@ -122,7 +123,7 @@ const StudentCourse = () => {
           >
             <SchoolIcon style={{ fontSize: "2rem" }} />
             <Typography variant="h6" sx={{ ml: 2, fontFamily: "Poppins, sans-serif" }}>
-              Lessons
+              Match - In Progress
             </Typography>
           </motion.div>
           <motion.div

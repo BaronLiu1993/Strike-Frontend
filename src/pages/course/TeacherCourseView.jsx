@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import CreatePost from "../create/CreatePost";
 import CreateHomework from "../create/CreateHomework";
-import CreateLesson from "../create/CreateLesson";
 import AddStudents from "../create/AddStudents";
 
 
@@ -32,7 +31,6 @@ const TeacherCourseView = () => {
   const [posts, setPosts] = useState([]);
   const [openDialog, setOpenDialog] = useState({
     post: false,
-    lesson: false,
     homework: false,
     student: false
   });
@@ -40,7 +38,6 @@ const TeacherCourseView = () => {
 
   const componentMapping = {
     post: <CreatePost />,
-    lesson: <CreateLesson />,
     homework: <CreateHomework />, 
     students: <AddStudents courseIdentification={courseId}/>
   };
@@ -117,6 +114,11 @@ const TeacherCourseView = () => {
     );
   }
 
+  if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+    localStorage.removeItem("access_token"); 
+    navigate("/"); 
+  }
+
   return (
     <motion.div
       className="flex flex-col items-center"
@@ -155,15 +157,6 @@ const TeacherCourseView = () => {
                     variant="contained" 
                     onClick={() => openCreateDialog("post")}>
             Create Post</Button>
-          <Button 
-          sx={{
-            fontFamily: "Poppins, sans-serif",
-            "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
-            "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
-            }} 
-            variant="contained"           
-            onClick={() => openCreateDialog("lesson")}>
-            Create Lesson</Button>
           <Button sx={{
                 fontFamily: "Poppins, sans-serif",
                 "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
@@ -203,7 +196,7 @@ const TeacherCourseView = () => {
           >
             <SchoolIcon style={{ fontSize: "2rem" }} />
             <Typography variant="h6" sx={{ ml: 2, fontFamily: "Poppins, sans-serif" }}>
-              Lessons
+            Match - In Progress
             </Typography>
           </motion.div>
           <motion.div
