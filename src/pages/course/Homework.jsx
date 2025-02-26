@@ -214,6 +214,8 @@ const Homework = () => {
                 >
                   {gradesLoading ? (
                     <CircularProgress size={20} sx={{ color: "#4CAF50" }} />
+                  ) : grades[homework.id] === 0 && gradedStatus[homework.id] === false ? (
+                    "Pending"
                   ) : gradedStatus[homework.id] === false ? (
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       <button
@@ -224,8 +226,6 @@ const Homework = () => {
                         Submit
                       </button>
                     </motion.div>
-                  ) : grades[homework.id] === 0 || grades[homework.id] === "Pending" ? (
-                    "Pending"
                   ) : (
                     `Grade: ${grades[homework.id]}`
                   )}

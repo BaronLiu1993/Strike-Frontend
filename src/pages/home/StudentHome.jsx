@@ -156,7 +156,7 @@ const StudentHome = () => {
                 my: 2,
               }}
             >
-              Matchs
+              Matches
             </Typography>
             <div className="flex space-x-4 mt-5">
               <motion.div
