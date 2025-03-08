@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Box, TextField, Button, Typography } from "@mui/material";
 
 const CreateLesson = () => {
+  const [loading, setLoading] = useState(false);
   const { courseId } = useParams();
   const [formData, setFormData] = useState({
     title: "",
@@ -14,9 +15,10 @@ const CreateLesson = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const response = await fetch(
         `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/lesson/${courseId}/add-lesson/`,
@@ -102,16 +104,16 @@ const CreateLesson = () => {
             type="submit"
             variant="contained"
             color="primary"
-            disabled = {!formData.title || !formData.content}
             fullWidth
+            disabled = {!formData.title || !formData.content}
             sx={{
               fontFamily: "Poppins, sans-serif",
               "& .MuiInputBase-root": { fontFamily: "Poppins, sans-serif" }, 
               "& .MuiInputLabel-root": { fontFamily: "Poppins, sans-serif" },
-              marginTop: "16px" }}
-            
+              marginTop:"16px"
+            }}
           >
-            Submit
+            {loading ? "Submitting..." : "Submit"}
           </Button>
         </form>
       </Box>

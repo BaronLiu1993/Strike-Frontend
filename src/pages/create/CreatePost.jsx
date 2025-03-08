@@ -4,6 +4,7 @@ import { Box, TextField, Button, Typography } from "@mui/material";
 
 const CreatePost = () => {
   const { courseId } = useParams();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -16,6 +17,7 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch(
         `https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/posts/${courseId}/add-posts/`,
@@ -109,7 +111,7 @@ const CreatePost = () => {
               marginTop:"16px"
             }}
           >
-            Submit
+            {loading ? "Submitting..." : "Submit"}
           </Button>
         </form>
       </Box>

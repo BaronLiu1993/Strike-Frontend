@@ -73,7 +73,7 @@ const Register = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        paddingBottom: inputFocused ? "150px" : "0", // extra space when input is focused
+        paddingBottom: inputFocused ? "150px" : "0", 
       }}
     >
       <Box
