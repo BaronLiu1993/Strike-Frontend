@@ -14,7 +14,6 @@ const Homework = () => {
   const [grades, setGrades] = useState({});
   const [gradedStatus, setGradedStatus] = useState({});
   const [gradesLoading, setGradesLoading] = useState(false);
-
   useEffect(() => {
     const fetchStudentId = async () => {
       try {
