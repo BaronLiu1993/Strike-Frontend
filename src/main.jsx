@@ -25,6 +25,7 @@ import StudentCourse from './pages/course/StudentCourse.jsx';
 import TeacherCourseView from './pages/course/TeacherCourseView.jsx';
 
 import Leaderboard from './pages/rank/TopRank.jsx';
+import Navbar from './pages/navbar/Navbar.jsx';
 
 const BackButtonHandler = () => {
   const navigate = useNavigate();
@@ -102,6 +103,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/lesson/:courseId" element={<Lesson />} />
         <Route path="/homework-teacher/:courseId" element={<TeacherHomework />} />
       </Routes>
+      <Navbar />
     </Router>
   </StrictMode>
 );

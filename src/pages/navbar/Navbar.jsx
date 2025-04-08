@@ -93,21 +93,7 @@ const Navbar = () => {
         </IconButton>
       </Tooltip>
 
-      <Tooltip title="Add Course" arrow>
-        <IconButton
-          onClick={() => handleNavigation("/add-course")}
-          sx={{
-            color: "#555",
-            "&:hover": {
-              color: "#000",
-              transform: "scale(1.1)", 
-            },
-            transition: "all 0.3s ease",
-          }}
-        >
-          <AddBoxIcon fontSize="large" />
-        </IconButton>
-      </Tooltip>
+      
     </Box>
   );
 };
