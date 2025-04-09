@@ -8,14 +8,9 @@
     "description": "A sample Progressive Web App for Strike.",
     "icons": [
       {
-        "src": "/src/assets/strike.png",
-        "sizes": "192x192",
+        "src": "/src/assets/apple.png",
+        "sizes": "180x180",
         "type": "image/png"
-      },
-      {
-        "src": "/src/assets/strikeapp.svg",
-        "sizes": "512x512",
-        "type": "image/svg+xml"
       }
     ]
   }
