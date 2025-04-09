@@ -3,12 +3,12 @@
     "short_name": "Strike",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#FFFFFF",
-    "theme_color": "#FFFFFF",
+    "background_color": "#000000",
+    "theme_color": "#000000",
     "description": "A sample Progressive Web App for Strike.",
     "icons": [
       {
-        "src": "/src/assets/strikeapp.svg",
+        "src": "/src/assets/strike.png",
         "sizes": "192x192",
         "type": "image/svg+xml"
       },
