@@ -6,12 +6,11 @@
     "background_color": "#000000",
     "theme_color": "#000000",
     "description": "A sample Progressive Web App for Strike.",
-    "icons": [
+    "icons": 
       {
         "src": "src/assets/1024.png",
         "sizes": "1024x1024",
         "type": "image/png"
       }
-    ]
   }
   
