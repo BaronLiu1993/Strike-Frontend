@@ -21,7 +21,7 @@ const StudentHome = () => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     const accessToken = localStorage.getItem("access_token");
-
+    
     try {
       const [coursesRes, studentRes] = await Promise.all([
         fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/v1/course/", {
@@ -71,8 +71,44 @@ const StudentHome = () => {
     }
   }, [navigate]);
 
+  const handleHomeNavigation = async (path) => {
+    try {
+      const accessToken = localStorage.getItem("access_token"); 
+      if (!accessToken) {
+        throw new Error("No access token found. Please log in again.");
+      }
+  
+      const roleResponse = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/user-role/", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+  
+      if (!roleResponse.ok) {
+        throw new Error("Failed to fetch user role. Please try again.");
+      }
+  
+      const roleData = await roleResponse.json();
+  
+      if (roleData.role === "teacher") {
+        navigate("/teacher-home");
+      } else if (roleData.role === "student") {
+        navigate("/student-home");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   useEffect(() => {
+    handleHomeNavigation()
     fetchData();
+    
   }, [fetchData]);
 
   const handleCourseClick = (courseId) => {

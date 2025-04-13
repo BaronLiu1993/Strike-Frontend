@@ -15,6 +15,38 @@ function TopRank() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const handleHomeNavigation = async (path) => {
+      try {
+        const accessToken = localStorage.getItem("access_token"); 
+        if (!accessToken) {
+          throw new Error("No access token found. Please log in again.");
+        }
+    
+        const roleResponse = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/user-role/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+    
+        if (!roleResponse.ok) {
+          throw new Error("Failed to fetch user role. Please try again.");
+        }
+    
+        const roleData = await roleResponse.json();
+
+        if (!roleData.role) {
+          navigate("/")
+        }
+    
+        
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
     const fetchLeaderboard = async () => {
       try {
         setLoading(true);
@@ -43,10 +75,20 @@ function TopRank() {
     };
 
     fetchLeaderboard();
+    handleHomeNavigation()
     if (error) {
       navigate("/");
     }
   }, [error, navigate]);
+
+  if (loading) {
+      return (
+        <Box className="flex justify-center items-center min-h-screen bg-gray-100">
+          <CircularProgress size={50} sx={{ color: "#3f51b5" }} />
+        </Box>
+      );
+    }
+  
 
   return (
     <Box sx={{
@@ -79,11 +121,7 @@ function TopRank() {
         borderRadius: '16px',
         padding: '1rem',
       }}>
-        {loading ? (
-          <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-            <CircularProgress />
-          </Box>
-        ) : error ? (
+        { error ? (
           <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>
         ) : students.length > 0 ? (
           students.map((student, index) => (

@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Typography, CssBaseline, CircularProgress, Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import GradeIcon from "@mui/icons-material/Grade";
-import ScoreboardIcon from "@mui/icons-material/Scoreboard";
 import "@fontsource/poppins";
 
 const TeacherHome = () => {
@@ -41,8 +40,44 @@ const TeacherHome = () => {
     }
   }, []);
 
+  const handleHomeNavigation = async (path) => {
+    try {
+      const accessToken = localStorage.getItem("access_token"); 
+      if (!accessToken) {
+        throw new Error("No access token found. Please log in again.");
+      }
+  
+      const roleResponse = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/user-role/", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+  
+      if (!roleResponse.ok) {
+        throw new Error("Failed to fetch user role. Please try again.");
+      }
+  
+      const roleData = await roleResponse.json();
+  
+      if (!roleData.role) {
+        navigate("/")
+      }
+
+      if (roleData.role === "student") {
+        navigate("/student-home");
+      } 
+      
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   useEffect(() => {
     fetchData();
+    handleHomeNavigation()
   }, [fetchData]);
 
   const handleCourseClick = (courseId) => {
@@ -105,7 +140,7 @@ const TeacherHome = () => {
     );
   }
 
-  if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+  if (error) {
     localStorage.removeItem("access_token"); 
     navigate("/"); 
   }

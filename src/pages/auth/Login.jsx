@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import AudiotrackIcon from '@mui/icons-material/Audiotrack';
@@ -12,6 +12,38 @@ const Login = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    const handleHomeNavigation = async (path) => {
+      try {
+        const accessToken = localStorage.getItem("access_token"); 
+        
+    
+        const roleResponse = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/user-role/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+    
+       
+    
+        const roleData = await roleResponse.json();
+    
+        if (roleData.role === "teacher") {
+          navigate("/teacher-home");
+        } else if (roleData.role === "student") {
+          navigate("/student-home");
+        } else {
+          navigate("/");
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+    handleHomeNavigation()
+  }, [])
 
   const submit = async (e) => {
     e.preventDefault();
@@ -19,6 +51,8 @@ const Login = () => {
     setIsLoggingIn(true);
 
     const user = { username, password };
+
+    
 
     try {
       const response = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/login/", {
@@ -144,23 +178,29 @@ const Login = () => {
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.02 }}
             >
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                disabled={isLoggingIn}
-                sx={{
-                  padding: "12px",
-                  fontSize: "1rem",
-                  fontWeight: "bold",
-                  textTransform: "none",
-                  backgroundColor: "#5b3819",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#5b3819" },
-                }}
-              >
-                {isLoggingIn ? "Logging in..." : "Login"}
-              </Button>
+
+
+
+                <Button
+                          variant="contained"
+                          fullWidth
+                          style={{
+                            fontFamily: "Poppins, sans-serif",
+                            background: "#5b3819",
+                          }}
+                          sx={{
+                            padding: '0.8rem',
+                            fontSize: '1rem',
+                            fontWeight: 'bold',
+                            backgroundColor: '#000',
+                            color: '#fff',
+                            '&:hover': { backgroundColor: '#333' },
+                          }}
+                          type="submit"
+                          disabled={isLoggingIn}
+                        >
+                            {isLoggingIn ? "Logging in..." : "Login"}
+                        </Button>
             </motion.div>
           </form>
 

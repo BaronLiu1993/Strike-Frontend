@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Typography,
   Box,
@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { AssignmentTurnedIn } from "@mui/icons-material";
-import Navbar from "../navbar/Navbar";
 
 const ViewSubmissions = () => {
   const { courseId, homeworkId } = useParams();
@@ -18,10 +17,48 @@ const ViewSubmissions = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
   const VIDEO_BASE_URL = "https://d1zh5iubdcvnfh.cloudfront.net/submissions/";
-
+  const navigate = useNavigate()
+  
   useEffect(() => {
+    const handleHomeNavigation = async (path) => {
+      try {
+        const accessToken = localStorage.getItem("access_token"); 
+        if (!accessToken) {
+          throw new Error("No access token found. Please log in again.");
+        }
+    
+        const roleResponse = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/user-role/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+    
+        if (!roleResponse.ok) {
+          throw new Error("Failed to fetch user role. Please try again.");
+        }
+    
+        const roleData = await roleResponse.json();
+    
+        if (!roleData.role) {
+          navigate("/")
+        }
+  
+        if (roleData.role === "student") {
+          navigate("/student-home");
+        } 
+
+        if (roleData.role === "student") {
+          navigate("/student-home");
+        } 
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
     const fetchSubmissions = async () => {
       try {
         setLoading(true);
@@ -52,6 +89,7 @@ const ViewSubmissions = () => {
     };
 
     fetchSubmissions();
+    handleHomeNavigation();
   }, [courseId, homeworkId]);
 
   const handleGradeSubmit = async (submissionId, grade) => {

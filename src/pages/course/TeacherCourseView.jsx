@@ -43,6 +43,41 @@ const TeacherCourseView = () => {
   };
 
   useEffect(() => {
+    const handleHomeNavigation = async (path) => {
+      try {
+        const accessToken = localStorage.getItem("access_token"); 
+        if (!accessToken) {
+          throw new Error("No access token found. Please log in again.");
+        }
+    
+        const roleResponse = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/user-role/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+    
+        if (!roleResponse.ok) {
+          throw new Error("Failed to fetch user role. Please try again.");
+        }
+    
+        const roleData = await roleResponse.json();
+    
+        if (!roleData.role) {
+          navigate("/")
+        }
+  
+        if (roleData.role === "student") {
+          navigate("/student-home");
+        } 
+        
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -82,7 +117,7 @@ const TeacherCourseView = () => {
         setLoading(false);
       }
     };
-
+    handleHomeNavigation()
     fetchData();
     if (error) {
       navigate("/"); 

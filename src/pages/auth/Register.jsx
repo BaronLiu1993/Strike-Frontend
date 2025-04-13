@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import { Box, Button, CircularProgress, TextField, Typography, Alert } from '@mui/material';
 
@@ -12,6 +12,40 @@ const Register = () => {
   const [inputFocused, setInputFocused] = useState(false);
 
   const navigate = useNavigate(); 
+
+  useEffect(() => {
+    const handleHomeNavigation = async (path) => {
+      try {
+        const accessToken = localStorage.getItem("access_token"); 
+        
+    
+        const roleResponse = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/user-role/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+    
+        
+    
+        const roleData = await roleResponse.json();
+    
+        if (roleData.role === "teacher") {
+          navigate("/teacher-home");
+        } else if (roleData.role === "student") {
+          navigate("/student-home");
+        } else {
+          navigate("/");
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    handleHomeNavigation()
+  }, [])
 
   const handleRegister = async () => {
     if (!username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {

@@ -14,7 +14,38 @@ const Homework = () => {
   const [grades, setGrades] = useState({});
   const [gradedStatus, setGradedStatus] = useState({});
   const [gradesLoading, setGradesLoading] = useState(false);
+
   useEffect(() => {
+    const handleHomeNavigation = async (path) => {
+      try {
+        const accessToken = localStorage.getItem("access_token"); 
+        if (!accessToken) {
+          throw new Error("No access token found. Please log in again.");
+        }
+    
+        const roleResponse = await fetch("https://strikeapp-fb52132f9a0c.herokuapp.com/api/auth/user-role/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+    
+        if (!roleResponse.ok) {
+          throw new Error("Failed to fetch user role. Please try again.");
+        }
+    
+        const roleData = await roleResponse.json();
+    
+        if (roleData.role) {
+          navigate("/")
+        }
+
+      } catch (err) {
+        setError(err.message);
+      }
+    };
     const fetchStudentId = async () => {
       try {
         const studentRes = await fetch(
@@ -76,6 +107,7 @@ const Homework = () => {
         setLoading(false);
       }
     };
+    handleHomeNavigation()
     fetchStudentId();
     fetchData();
   }, [courseId, navigate]);
