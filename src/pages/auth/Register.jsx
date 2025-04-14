@@ -36,9 +36,8 @@ const Register = () => {
           navigate("/teacher-home");
         } else if (roleData.role === "student") {
           navigate("/student-home");
-        } else {
-          navigate("/");
-        }
+        } 
+        
       } catch (err) {
         setError(err.message);
       }
