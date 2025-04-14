@@ -38,7 +38,7 @@ const Homework = () => {
     
         const roleData = await roleResponse.json();
     
-        if (roleData.role) {
+        if (!roleData.role) {
           navigate("/")
         }
 
